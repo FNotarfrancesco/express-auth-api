@@ -1,0 +1,173 @@
+<div class="dashboard">
+  <header>
+    <h1>Mis Productos</h1>
+    <div class="user-info">
+      <h4>Hola, {{ usuario?.name }}</h4>
+      <button (click)="logout()" class="btn-logout">Cerrar Sesión</button>
+    </div>
+  </header>
+
+  <!-- Modal de confirmar logout -->
+  <div class="modal" *ngIf="mostrarModalLogout">
+    <div class="modal-content">
+      <h3>¿Seguro que quieres cerrar sesión?</h3>
+      <div class="modal-acciones">
+        <button (click)="confirmarLogout()" class="btn-confirmar">Aceptar</button>
+        <button (click)="cerrarModalLogout()" class="btn-cancelar-modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmar eliminar -->
+  <div class="modal" *ngIf="mostrarModalEliminar">
+    <div class="modal-content">
+      <h3>¿Seguro que querés eliminar este producto?</h3>
+      <div class="modal-acciones">
+        <button (click)="confirmarEliminar()" class="btn-confirmar">Eliminar</button>
+        <button (click)="cerrarModalEliminar()" class="btn-cancelar-modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Formulario para crear -->
+  <div class="card crear">
+    <h3>Nuevo Producto</h3>
+    <div class="form-row">
+      <div class="campo">
+        <label>Nombre</label>
+        <input type="text" [(ngModel)]="nuevoProducto.nombre" required>
+      </div>
+      <div class="campo">
+        <label>Precio</label>
+        <input type="number" [(ngModel)]="nuevoProducto.precio" required>
+      </div>
+      <div class="campo">
+        <label>Categoría</label>
+        <input type="text" [(ngModel)]="nuevoProducto.categoria">
+      </div>
+      <div class="campo">
+        <label>Stock</label>
+        <input type="number" [(ngModel)]="nuevoProducto.stock">
+      </div>
+      <div class="campo">
+        <label>Descripción</label>
+        <textarea [(ngModel)]="nuevoProducto.descripcion" rows="3"></textarea>
+      </div>
+      <div class="checkbox-wrapper" (click)="toggleCheckbox('nuevo')">
+        <input type="checkbox" [(ngModel)]="nuevoProducto.disponible" id="disp">
+        <div class="toggle"></div>
+        <span class="checkbox-label">Disponible</span>
+      </div>
+
+      <button (click)="crearProducto()">Agregar</button>
+    </div>
+
+  </div>
+
+
+
+  <!-- Listado de productos -->
+  <div class="titulo-filtro">
+    <h2>Listado de Productos</h2>
+    <div class="filtro-wrapper">
+      <select [(ngModel)]="filtroOrden" (change)="filtrarProductos()">
+        <option value="">Filtrar</option>
+        <option value="mayor">Mayor Precio</option>
+        <option value="menor">Menor Precio</option>
+        <option value="az">A - Z</option>
+        <option value="za">Z - A</option>
+      </select>
+    </div>
+    <div class="filtro-wrapper">
+      <select [(ngModel)]="categoriaSeleccionada" (change)="filtrarProductos()">
+        <option value="">Categoría</option>
+        <option *ngFor="let cat of categoriasDisponibles" [value]="cat">{{ cat }}</option>
+      </select>
+    </div>
+
+  </div>
+
+
+  <div class="busqueda">
+    <input type="text" [(ngModel)]="terminoBusqueda" (input)="filtrarProductos()"
+      placeholder="Buscar producto por nombre...">
+  </div>
+
+  <div class="productos-grid">
+    <div *ngFor="let producto of productosFiltrados" class="card producto">
+
+      <!-- Modo visualización -->
+      <div *ngIf="editandoId !== producto._id">
+        <h3>{{ producto.nombre }}</h3>
+        <p class="precio">${{ producto.precio }}</p>
+        <div class="descripcion-wrapper">
+          <p class="descripcion">
+            {{ descripcionExpandida === producto._id ? producto.descripcion : (producto.descripcion | slice:0:80) }}
+            <span *ngIf="producto.descripcion && producto.descripcion.length > 80">
+              <a (click)="toggleDescripcion(producto._id)" class="leer-mas">
+                {{ descripcionExpandida === producto._id ? ' Ver menos' : '...Leer más' }}
+              </a>
+            </span>
+          </p>
+        </div>
+        <p class="desc">Categoría: {{ producto.categoria }}</p>
+        <p class="desc">Stock: {{ producto.stock }}</p>
+        <p class="desc" [class.disponible]="producto.disponible" [class.no-disponible]="!producto.disponible">
+          {{ producto.disponible ? 'Disponible' : 'No disponible' }}
+        </p>
+        <div class="acciones">
+          <button (click)="iniciarEdicion(producto)" class="btn-edit">Editar</button>
+          <button (click)="eliminarProducto(producto._id)" class="btn-delete">Eliminar</button>
+        </div>
+      </div>
+
+      <!-- Modo edición -->
+      <div *ngIf="editandoId === producto._id">
+        <h3>Editando</h3>
+        <div class="edit-row">
+          <div class="campo">
+            <label>Nombre</label>
+            <input type="text" [(ngModel)]="editandoProducto.nombre" placeholder="Nombre">
+          </div>
+          <div class="campo">
+            <label>Precio</label>
+            <input type="number" [(ngModel)]="editandoProducto.precio" placeholder="Precio">
+          </div>
+          <div class="campo">
+            <label>Descripción</label>
+            <textarea [(ngModel)]="editandoProducto.descripcion" rows="3"></textarea>
+          </div>
+          <div class="campo">
+            <label>Categoría</label>
+            <input type="text" [(ngModel)]="editandoProducto.categoria" placeholder="Categoría">
+          </div>
+          <div class="campo">
+            <label>Stock</label>
+            <input type="number" [(ngModel)]="editandoProducto.stock" placeholder="Stock">
+          </div>
+          <div class="checkbox-wrapper" (click)="toggleCheckbox('edit')">
+            <input type="checkbox" [(ngModel)]="editandoProducto.disponible" id="disp-edit">
+            <div class="toggle"></div>
+            <span class="checkbox-label">Disponible</span>
+          </div>
+        </div>
+
+        <div class="acciones">
+          <button (click)="guardarEdicion()" class="btn-save">Guardar</button>
+          <button (click)="cancelarEdicion()" class="btn-cancel">Cancelar</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p *ngIf="productosFiltrados.length === 0" class="vacio">
+    <ng-container *ngIf="terminoBusqueda">
+      No se encontraron productos para "{{ terminoBusqueda }}"
+    </ng-container>
+    <ng-container *ngIf="!terminoBusqueda">
+      No hay productos todavía
+    </ng-container>
+  </p>
+</div>
