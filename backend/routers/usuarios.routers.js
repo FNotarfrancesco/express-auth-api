@@ -7,9 +7,7 @@ import { registerSchema } from '../validators/auth.validator.js'
 const routerUsuarios = express.Router()
 
 routerUsuarios.post('/api/auth/register', validateBody(registerSchema), usuariosController.register)
-
 routerUsuarios.post('/api/auth/login', loginLimiter, usuariosController.loginApi)
-
 routerUsuarios.get('/api/auth/logout', usuariosController.logout)
 
 export default routerUsuarios

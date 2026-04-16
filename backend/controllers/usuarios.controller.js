@@ -20,8 +20,8 @@ const register = async (req, res) => {
     errors.push('La contraseña no coincide')
   }
 
-  if (password.length < 5) {
-    errors.push('La contraseña debe tener al menos 5 caracteres')
+  if (password.length < 8) {
+    errors.push('La contraseña debe tener al menos 8 caracteres')
   }
 
   if (errors.length > 0) {

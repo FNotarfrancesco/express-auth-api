@@ -437,8 +437,6 @@ button:active {
   min-width: 140px;
 }
 
-
-
 .filtro-wrapper select:focus {
   outline: none;
   border-color: #007bff;

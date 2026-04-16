@@ -17,18 +17,23 @@ import { ChangeDetectorRef } from '@angular/core';
 
 export class Dashboard implements OnInit {
   productos: any[] = [];
+  productosFiltrados: any[] = [];
+
   nuevoProducto = { nombre: '', descripcion: '', precio: 0, categoria: '', stock: 0, disponible: true };
+
   editandoId: string | null = null;
   editandoProducto: any = { nombre: '', descripcion: '', precio: 0, categoria: '', stock: 0, disponible: true };
+
   usuario: any = null;
   mostrarModalLogout = false;
   mostrarModalEliminar = false;
   productoAEliminar: string | null = null;
+
   terminoBusqueda = '';
   filtroOrden = '';
   categoriaSeleccionada = '';
   categoriasDisponibles: string[] = [];
-  productosFiltrados: any[] = [];
+
   descripcionExpandida: string | null = null;
 
   constructor(
@@ -39,13 +44,11 @@ export class Dashboard implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.cargarProductos();
-
     const userData = localStorage.getItem('user');
     if (userData) {
       this.usuario = JSON.parse(userData);
     }
-
+    this.cargarProductos();
   }
 
   cargarProductos() {
@@ -53,11 +56,45 @@ export class Dashboard implements OnInit {
       next: (data) => {
         this.productos = data;
         this.productosFiltrados = data;
-        this.categoriasDisponibles = [...new Set(data.map(p => p.categoria).filter(c => c))];
+        this.extraerCategorias();
         this.cdr.detectChanges();
       },
       error: (err) => console.error(err)
     });
+  }
+
+  extraerCategorias() {
+    const cats = this.productos.map(p => p.categoria).filter(c => c);
+    this.categoriasDisponibles = [...new Set(cats)];
+  }
+
+  filtrarProductos() {
+    let resultado = [...this.productos];
+
+    if (this.terminoBusqueda.trim()) {
+      const term = this.terminoBusqueda.toLowerCase();
+      resultado = resultado.filter(p => p.nombre.toLowerCase().includes(term));
+    }
+
+    if (this.categoriaSeleccionada) {
+      resultado = resultado.filter(p => p.categoria === this.categoriaSeleccionada);
+    }
+
+    if (this.filtroOrden === 'mayor') {
+      resultado.sort((a, b) => b.precio - a.precio);
+    } else if (this.filtroOrden === 'menor') {
+      resultado.sort((a, b) => a.precio - b.precio);
+    } else if (this.filtroOrden === 'az') {
+      resultado.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    } else if (this.filtroOrden === 'za') {
+      resultado.sort((a, b) => b.nombre.localeCompare(a.nombre));
+    } else if (this.filtroOrden === 'disponible') {
+      resultado = resultado.filter(p => p.disponible);
+    } else if (this.filtroOrden === 'nodisponible') {
+      resultado = resultado.filter(p => !p.disponible);
+    }
+
+    this.productosFiltrados = resultado;
   }
 
   crearProducto() {
@@ -72,33 +109,6 @@ export class Dashboard implements OnInit {
       },
       error: (err) => console.error(err)
     });
-  }
-
-  filtrarProductos() {
-    let resultado = [...this.productos];
-
-    if (this.terminoBusqueda) {
-      const termino = this.terminoBusqueda.toLowerCase().trim();
-      resultado = resultado.filter(p =>
-        p.nombre.toLowerCase().includes(termino)
-      );
-    }
-
-    if (this.categoriaSeleccionada) {
-      resultado = resultado.filter(p => p.categoria === this.categoriaSeleccionada);
-    }
-
-    if (this.filtroOrden === 'mayor') {
-      resultado = resultado.sort((a, b) => b.precio - a.precio);
-    } else if (this.filtroOrden === 'menor') {
-      resultado = resultado.sort((a, b) => a.precio - b.precio);
-    } else if (this.filtroOrden === 'az') {
-      resultado = resultado.sort((a, b) => a.nombre.toLowerCase().localeCompare(b.nombre.toLowerCase()));
-    } else if (this.filtroOrden === 'za') {
-      resultado = resultado.sort((a, b) => b.nombre.toLowerCase().localeCompare(a.nombre.toLowerCase()));
-    }
-
-    this.productosFiltrados = resultado;
   }
 
   iniciarEdicion(producto: any) {
@@ -146,7 +156,6 @@ export class Dashboard implements OnInit {
     this.productoAEliminar = null;
   }
 
-
   logout() {
     this.mostrarModalLogout = true;
   }
@@ -166,7 +175,6 @@ export class Dashboard implements OnInit {
     this.mostrarModalLogout = false;
   }
 
-
   toggleCheckbox(tipo: string) {
     if (tipo === 'nuevo') {
       this.nuevoProducto.disponible = !this.nuevoProducto.disponible;
@@ -182,5 +190,4 @@ export class Dashboard implements OnInit {
       this.descripcionExpandida = id;
     }
   }
-
 }
