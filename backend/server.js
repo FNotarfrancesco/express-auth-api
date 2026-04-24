@@ -28,7 +28,12 @@ app.use(cors({
   origin: process.env.ALLOWED_ORIGIN || 'http://localhost:4200',
   credentials: true
 }))
-app.use(globalLimiter)
+
+// Solo aplicamos el limitador si estamos en producción
+if (process.env.NODE_ENV === 'production') {
+  app.use(globalLimiter)
+}
+
 app.use(express.static('./public'))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
@@ -50,10 +55,10 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use(errorHandler)
-
 app.use('/', routerUsuarios)
 app.use('/', routerProductosApi)
+
+app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.log(`Aplicación funcionando: http://localhost:${PORT}`)

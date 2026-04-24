@@ -442,3 +442,17 @@ button:active {
   border-color: #007bff;
 }
 
+.tri-state-filter {
+  display: inline-flex;
+  gap: 6px;
+}
+.tri-state-filter button {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+}
+.tri-state-filter button.active {
+  background: #e9e9e9;
+  font-weight: bold;
+}

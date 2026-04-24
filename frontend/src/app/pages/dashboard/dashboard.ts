@@ -14,7 +14,6 @@ import { ChangeDetectorRef } from '@angular/core';
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
-
 export class Dashboard implements OnInit {
   productos: any[] = [];
   productosFiltrados: any[] = [];
@@ -33,6 +32,9 @@ export class Dashboard implements OnInit {
   filtroOrden = '';
   categoriaSeleccionada = '';
   categoriasDisponibles: string[] = [];
+
+  // Tri-state filter
+  statusFiltro: 'todos' | 'disponible' | 'no-disponible' = 'todos';
 
   descripcionExpandida: string | null = null;
 
@@ -88,9 +90,12 @@ export class Dashboard implements OnInit {
       resultado.sort((a, b) => a.nombre.localeCompare(b.nombre));
     } else if (this.filtroOrden === 'za') {
       resultado.sort((a, b) => b.nombre.localeCompare(a.nombre));
-    } else if (this.filtroOrden === 'disponible') {
+    }
+
+    // Tri-state de disponibilidad
+    if (this.statusFiltro === 'disponible') {
       resultado = resultado.filter(p => p.disponible);
-    } else if (this.filtroOrden === 'nodisponible') {
+    } else if (this.statusFiltro === 'no-disponible') {
       resultado = resultado.filter(p => !p.disponible);
     }
 
@@ -181,6 +186,11 @@ export class Dashboard implements OnInit {
     } else if (tipo === 'edit') {
       this.editandoProducto.disponible = !this.editandoProducto.disponible;
     }
+  }
+
+  setStatusFiltro(status: 'todos'|'disponible'|'no-disponible') {
+    this.statusFiltro = status;
+    this.filtrarProductos();
   }
 
   toggleDescripcion(id: string) {
