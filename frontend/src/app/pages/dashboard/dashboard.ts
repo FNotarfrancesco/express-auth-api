@@ -33,10 +33,15 @@ export class Dashboard implements OnInit {
   categoriaSeleccionada = '';
   categoriasDisponibles: string[] = [];
 
-  // Tri-state filter
   statusFiltro: 'todos' | 'disponible' | 'no-disponible' = 'todos';
 
   descripcionExpandida: string | null = null;
+
+  usuarios: any[] = [];
+  editandoUsuarioId: string | null = null;
+  usuarioEditandoRol: any = null;
+  mostrarModalEliminarUsuario = false;
+  usuarioAEliminar: any = null;
 
   constructor(
     private productosService: ProductosService,
@@ -51,6 +56,91 @@ export class Dashboard implements OnInit {
       this.usuario = JSON.parse(userData);
     }
     this.cargarProductos();
+    if (this.esAdmin) {
+      this.cargarUsuarios();
+    }
+  }
+
+  get esAdmin(): boolean {
+    return this.usuario?.rol === 'admin';
+  }
+
+  get puedeEditar(): boolean {
+    return this.usuario?.rol === 'admin' || this.usuario?.rol === 'editor';
+  }
+
+  get puedeEliminar(): boolean {
+  return this.usuario?.rol === 'admin';
+  }
+
+  cargarUsuarios() {
+    this.authService.getAllUsers().subscribe({
+      next: (data) => {
+        this.usuarios = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  iniciarEdicionUsuario(usuario: any) {
+    this.editandoUsuarioId = usuario._id;
+    this.usuarioEditandoRol = { ...usuario };
+  }
+
+  guardarRolUsuario() {
+    if (!this.editandoUsuarioId || !this.usuarioEditandoRol) return;
+
+    this.authService.updateUserRole(this.editandoUsuarioId, this.usuarioEditandoRol.rol).subscribe({
+      next: () => {
+        this.editandoUsuarioId = null;
+        this.usuarioEditandoRol = null;
+        this.cargarUsuarios();
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  cancelarEdicionUsuario() {
+    this.editandoUsuarioId = null;
+    this.usuarioEditandoRol = null;
+  }
+
+  eliminarUsuario(usuario: any) {
+    this.usuarioAEliminar = usuario;
+    this.mostrarModalEliminarUsuario = true;
+  }
+
+  confirmarEliminarUsuario() {
+    if (this.usuarioAEliminar) {
+      this.authService.deleteUser(this.usuarioAEliminar._id).subscribe({
+        next: () => {
+          this.cargarUsuarios();
+          this.cerrarModalEliminarUsuario();
+        },
+        error: (err) => console.error(err)
+      });
+    }
+  }
+
+cerrarModalEliminarUsuario() {
+    this.mostrarModalEliminarUsuario = false;
+    this.usuarioAEliminar = null;
+  }
+
+  exportarCSV() {
+    this.productosService.exportarCSV().subscribe({
+      next: (csv) => {
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'productos.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => console.error(err)
+    });
   }
 
   cargarProductos() {
@@ -200,4 +290,5 @@ export class Dashboard implements OnInit {
       this.descripcionExpandida = id;
     }
   }
+
 }

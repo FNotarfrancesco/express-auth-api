@@ -2,10 +2,55 @@
   <header>
     <h1>Mis Productos</h1>
     <div class="user-info">
-      <h4>Hola, {{ usuario?.name }}</h4>
+      <h4>Hola, {{ usuario?.name }} <span class="badge-rol"> {{ usuario?.rol }} </span></h4>
       <button (click)="logout()" class="btn-logout">Cerrar Sesión</button>
     </div>
   </header>
+
+  <!-- Panel de Administración de Usuarios (solo admin) -->
+  <div class="panel-admin" *ngIf="esAdmin">
+    <h2>Administración de Usuarios</h2>
+    <div class="usuarios-grid">
+      <div *ngFor="let user of usuarios" class="card-usuario">
+        <div *ngIf="editandoUsuarioId !== user._id">
+          <p><strong>Nombre:</strong> {{ user.name }}</p>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>Rol:</strong> <span class="badge-rol-user">{{ user.rol }}</span></p>
+          <div class="acciones">
+            <button (click)="iniciarEdicionUsuario(user)" class="btn-edit">Cambiar Rol</button>
+            <button (click)="eliminarUsuario(user)" class="btn-delete-user">Eliminar usuario</button>
+          </div>
+        </div>
+        <div *ngIf="editandoUsuarioId === user._id">
+          <p><strong>Nombre:</strong> {{ user.name }}</p>
+          <div class="campo">
+            <label>Rol:</label>
+            <select [(ngModel)]="usuarioEditandoRol.rol">
+              <option value="admin">Admin</option>
+              <option value="editor">Editor</option>
+              <option value="viewer">Viewer</option>
+            </select>
+          </div>
+          <div class="acciones">
+            <button (click)="guardarRolUsuario()" class="btn-save">Guardar</button>
+            <button (click)="cancelarEdicionUsuario()" class="btn-cancel">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmar eliminar usuario -->
+  <div class="modal" *ngIf="mostrarModalEliminarUsuario">
+    <div class="modal-content">
+      <h3>¿Seguro que querés eliminar este usuario?</h3>
+      <p>Esta acción no se puede deshacer.</p>
+      <div class="modal-acciones">
+        <button (click)="confirmarEliminarUsuario()" class="btn-confirmar">Eliminar</button>
+        <button (click)="cerrarModalEliminarUsuario()" class="btn-cancelar-modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal de confirmar logout -->
   <div class="modal" *ngIf="mostrarModalLogout">
@@ -18,10 +63,11 @@
     </div>
   </div>
 
-  <!-- Modal de confirmar eliminar -->
+  <!-- Modal de confirmar eliminar producto -->
   <div class="modal" *ngIf="mostrarModalEliminar">
     <div class="modal-content">
       <h3>¿Seguro que querés eliminar este producto?</h3>
+      <p>Esta acción no se puede deshacer.</p>
       <div class="modal-acciones">
         <button (click)="confirmarEliminar()" class="btn-confirmar">Eliminar</button>
         <button (click)="cerrarModalEliminar()" class="btn-cancelar-modal">Cancelar</button>
@@ -29,8 +75,8 @@
     </div>
   </div>
 
-  <!-- Formulario para crear -->
-  <div class="card crear">
+  <!-- Formulario para crear (solo admin/editor) -->
+  <div class="card crear" *ngIf="puedeEditar">
     <h3>Nuevo Producto</h3>
     <div class="form-row">
       <div class="campo">
@@ -86,10 +132,13 @@
     <div class="filtro-wrapper" style="margin-left: 12px; display: inline-block; vertical-align: middle;">
       <div role="group" aria-label="Estado de disponibilidad" class="tri-state-filter">
         <button type="button" (click)="setStatusFiltro('todos')" [class.active]="statusFiltro==='todos'">Todos</button>
-        <button type="button" (click)="setStatusFiltro('disponible')" [class.active]="statusFiltro==='disponible'">Disponible</button>
-        <button type="button" (click)="setStatusFiltro('no-disponible')" [class.active]="statusFiltro==='no-disponible'">No disponible</button>
+        <button type="button" (click)="setStatusFiltro('disponible')"
+          [class.active]="statusFiltro==='disponible'">Disponible</button>
+        <button type="button" (click)="setStatusFiltro('no-disponible')"
+          [class.active]="statusFiltro==='no-disponible'">No disponible</button>
       </div>
     </div>
+    <button (click)="exportarCSV()" class="btn-export">Exportar CSV</button>
   </div>
 
   <div class="busqueda">
@@ -119,9 +168,9 @@
         <p class="desc" [class.disponible]="producto.disponible" [class.no-disponible]="!producto.disponible">
           {{ producto.disponible ? 'Disponible' : 'No disponible' }}
         </p>
-        <div class="acciones">
+        <div class="acciones" *ngIf="puedeEditar">
           <button (click)="iniciarEdicion(producto)" class="btn-edit">Editar</button>
-          <button (click)="eliminarProducto(producto._id)" class="btn-delete">Eliminar</button>
+          <button (click)="eliminarProducto(producto._id)" class="btn-delete" *ngIf="puedeEliminar">Eliminar</button>
         </div>
       </div>
 

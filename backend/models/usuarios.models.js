@@ -53,9 +53,40 @@ const obtenerUsuarioPorId = async (id) => {
 
         const usuario = await UsuarioModelo.findById(id)
         return usuario
-        
+
     } catch (error) {
         console.log('[obtenerUsuarioPorId]', error)
+    }
+}
+
+const obtenerTodosLosUsuarios = async () => {
+    try {
+        const usuarios = await UsuarioModelo.find().select('-password')
+        return usuarios
+    } catch (error) {
+        console.log('[obtenerTodosLosUsuarios]', error)
+    }
+}
+
+const actualizarRolUsuario = async (id, nuevoRol) => {
+    try {
+        const usuario = await UsuarioModelo.findByIdAndUpdate(
+            id,
+            { rol: nuevoRol },
+            { new: true }
+        ).select('-password')
+        return usuario
+    } catch (error) {
+        console.log('[actualizarRolUsuario]', error)
+    }
+}
+
+const eliminarUsuario = async (id) => {
+    try {
+        const usuario = await UsuarioModelo.findByIdAndDelete(id)
+        return usuario
+    } catch (error) {
+        console.log('[eliminarUsuario]', error)
     }
 }
 
@@ -63,5 +94,8 @@ export default {
     crearUsuario,
     obtenerUsuarioPorEmail,
     obtenerUsuarioPorId,
-    revisarPassword
+    revisarPassword,
+    obtenerTodosLosUsuarios,
+    actualizarRolUsuario,
+    eliminarUsuario
 }

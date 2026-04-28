@@ -15,7 +15,12 @@
         <input type="password" [(ngModel)]="password" name="password" required>
       </div>
 
-      <button type="submit">Entrar</button>
+      <button type="submit" class="submit">Entrar</button>
+      <div class="demo-login">
+        <button type="button" class="demo-button" (click)="loginDemo('admin')">Ingresar como Admin (Demo)</button>
+        <button type="button" class="demo-button" (click)="loginDemo('editor')">Ingresar como Editor (Demo)</button>
+        <button type="button" class="demo-button" (click)="loginDemo('viewer')">Ingresar como Viewer (Demo)</button>
+      </div>
     </form>
 
     <p>¿No tenes cuenta? <a routerLink="/register">Registrate</a></p>

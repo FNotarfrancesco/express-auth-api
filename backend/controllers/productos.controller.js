@@ -1,9 +1,5 @@
 import modelosProducto from '../models/productos.models.js'
 
-// ===============================
-// CRUD API JSON
-// ===============================
-
 const getAllJson = async (req, res) => {
   try {
     const productos = await modelosProducto.obtenerTodos()
@@ -63,14 +59,34 @@ const removeJson = async (req, res) => {
   }
 }
 
-// ===============================
-// EXPORT
-// ===============================
+const exportarProductosCSV = async (req, res) => {
+  try {
+    const productos = await modelosProducto.obtenerTodos()
+    
+    if (!productos || productos.length === 0) {
+      res.setHeader('Content-Type', 'application/octet-stream')
+      res.setHeader('Content-Disposition', 'attachment; filename=productos.csv')
+      return res.send('Nombre,Precio,Categoría,Stock,Disponible\n')
+    }
+    
+    const csvHeader = 'Nombre,Precio,Categoría,Stock,Disponible\n'
+    const csvRows = productos.map(p => 
+      `${p.nombre},${p.precio},${p.categoria || ''},${p.stock},${p.disponible}`
+    ).join('\n')
+    
+    res.setHeader('Content-Type', 'application/octet-stream')
+    res.setHeader('Content-Disposition', 'attachment; filename=productos.csv')
+    res.send(csvHeader + csvRows)
+  } catch (error) {
+    res.status(500).json({ errors: ['Error al exportar'] })
+  }
+}
 
 export default {
   getAllJson,
   getOneJson,
   createJson,
   updateJson,
-  removeJson
+  removeJson,
+  exportarProductosCSV
 }

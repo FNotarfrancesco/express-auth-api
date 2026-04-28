@@ -456,3 +456,55 @@ button:active {
   background: #e9e9e9;
   font-weight: bold;
 }
+
+.panel-admin {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 2px solid #ffc107;
+}
+
+.panel-admin h2 {
+  margin: 0 0 1rem;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.usuarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.card-usuario {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-usuario p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.card-usuario strong {
+  color: #555;
+}
+
+.badge-rol {
+  background: #ffc107;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.badge-rol-user {
+  background: #17a2b8;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}

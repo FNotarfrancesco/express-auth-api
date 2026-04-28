@@ -22,6 +22,18 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/logout`, { withCredentials: true });
   }
 
+  getAllUsers(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users`, { withCredentials: true });
+  }
+
+  updateUserRole(userId: string, rol: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/${userId}/rol`, { rol }, { withCredentials: true });
+  }
+
+  deleteUser(userId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/users/${userId}`, { withCredentials: true });
+  }
+
   isLoggedIn(): boolean {
     return !!localStorage.getItem('user');
   }

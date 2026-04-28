@@ -51,4 +51,21 @@ export class Login {
     });
   }
 
+  loginDemo(role: 'admin' | 'editor' | 'viewer') {
+    switch (role) {
+      case 'admin':
+        this.email = 'admin@example.com';
+        this.password = 'admin123+';
+        break;
+      case 'editor':
+        this.email = 'editor@example.com';
+        this.password = 'editor123+';
+        break;
+      case 'viewer': this.email = 'viewer@example.com';
+        this.password = 'viewer123+';
+        break;
+    }
+    this.onLogin();
+  }
+
 }

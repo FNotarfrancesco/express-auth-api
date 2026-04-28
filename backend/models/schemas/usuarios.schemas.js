@@ -15,6 +15,12 @@ const usuariosEsquema = new mongoose.Schema(
         password: {
             type: String,
             require: true
+        },
+        rol: {
+            type: String,
+            enum: ['admin', 'editor', 'viewer'],
+            default: 'viewer',
+            required: true
         }
     },
     {

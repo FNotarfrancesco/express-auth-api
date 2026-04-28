@@ -52,7 +52,7 @@ const loginApi = (req, res, next) => {
     
     req.logIn(user, (err) => {
       if (err) return res.status(500).json({ errors: ['Error al iniciar sesión'] })
-      return res.json({ message: 'Login exitoso', user: { id: user._id, name: user.name, email: user.email } })
+      return res.json({ message: 'Login exitoso', user: { id: user._id, name: user.name, email: user.email, rol: user.rol } })
     })
   })(req, res, next)
 }
@@ -70,11 +70,69 @@ const logout = (req, res, next) => {
 }
 
 // ===============================
+// GET ALL USERS (admin)
+// ===============================
+
+const obtenerTodosLosUsuarios = async (req, res) => {
+  try {
+    const usuarios = await usuarioModelos.obtenerTodosLosUsuarios()
+    res.json(usuarios)
+  } catch (error) {
+    res.status(500).json({ errors: ['Error al obtener usuarios'] })
+  }
+}
+
+// ===============================
+// UPDATE USER ROLE (admin)
+// ===============================
+
+const actualizarRolUsuario = async (req, res) => {
+  const { id } = req.params
+  const { rol } = req.body
+
+  const rolesValidos = ['admin', 'editor', 'viewer']
+  if (!rolesValidos.includes(rol)) {
+    return res.status(400).json({ errors: ['Rol inválido'] })
+  }
+
+  try {
+    const usuario = await usuarioModelos.actualizarRolUsuario(id, rol)
+    if (!usuario) {
+      return res.status(404).json({ errors: ['Usuario no encontrado'] })
+    }
+    res.json({ message: 'Rol actualizado', user: usuario })
+  } catch (error) {
+    res.status(500).json({ errors: ['Error al actualizar rol'] })
+  }
+}
+
+// ===============================
+// DELETE USER (admin)
+// ===============================
+
+const eliminarUsuario = async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const usuario = await usuarioModelos.eliminarUsuario(id)
+    if (!usuario) {
+      return res.status(404).json({ errors: ['Usuario no encontrado'] })
+    }
+    res.json({ message: 'Usuario eliminado' })
+  } catch (error) {
+    res.status(500).json({ errors: ['Error al eliminar usuario'] })
+  }
+}
+
+// ===============================
 // EXPORT
 // ===============================
 
 export default {
   register,
   loginApi,
-  logout
+  logout,
+  obtenerTodosLosUsuarios,
+  actualizarRolUsuario,
+  eliminarUsuario
 }

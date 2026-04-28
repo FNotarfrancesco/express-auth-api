@@ -29,4 +29,8 @@ export class ProductosService {
   delete(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, { withCredentials: true });
   }
+
+  exportarCSV(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/export`, { withCredentials: true, responseType: 'text' });
+  }
 }
