@@ -16,13 +16,12 @@ header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  padding: 1.5rem 1.5rem;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
-  padding: 1rem 1.5rem;
 }
 
 h1, h2, h3, h4, p {
@@ -101,13 +100,13 @@ textarea {
   font-family: inherit;
   resize: vertical;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   color: #e4e4e7;
 }
 
 textarea:focus {
   outline: none;
-  border-color: rgba(0, 123, 255, 0.5);
+  border-color: white;
 }
 
 .card.producto:hover {
@@ -136,7 +135,7 @@ textarea:focus {
 
 .form-row input:focus {
   outline: none;
-  border-color: rgba(0, 123, 255, 0.5);
+  border-color: white;
 }
 
 .productos-grid {
@@ -148,12 +147,16 @@ textarea:focus {
 
 .card.producto {
   position: relative;
-  padding-bottom: 4rem;
+  padding: 1.5rem;
+  padding-bottom: 5rem;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
 }
 
 .card.producto .acciones {
   position: absolute;
-  bottom: 1rem;
+  bottom: 1.2rem;
   left: 1.5rem;
 }
 
@@ -218,18 +221,19 @@ button:active {
   background: rgba(220, 53, 69, 0.3);
   border: 1px solid rgba(220, 53, 69, 0.5);
   color: #fff;
+  font-size: 1rem;
 }
 
 .btn-logout:hover {
   background: rgba(220, 53, 69, 0.5);
 }
 
-.card.crear button,
-.btn-save {
+.card.crear button {
   background: rgba(40, 167, 69, 0.3);
   border: 1px solid rgba(40, 167, 69, 0.5);
   color: #fff;
-  padding: 0.6rem 1rem;
+  padding: 0.75rem 1.2rem;
+  font-size: 1rem;
 }
 
 .card.crear button:hover,
@@ -237,25 +241,40 @@ button:active {
   background: rgba(40, 167, 69, 0.5);
 }
 
+.btn-save {
+  background: rgba(40, 167, 69, 0.3);
+  border: 1px solid rgba(40, 167, 69, 0.5);
+  color: #fff;
+  padding: 0.55rem 1rem;
+  font-size: 1rem;
+}
+
 .btn-edit {
   background: rgba(0, 123, 255, 0.3);
   border: 1px solid rgba(0, 123, 255, 0.5);
   color: #fff;
-  padding: 0.4rem 0.7rem;
-  font-size: 0.85rem;
+  padding: 0.45rem 0.75rem;
+  font-size: 1rem;
 }
 
 .btn-edit:hover {
   background: rgba(0, 123, 255, 0.5);
 }
 
-.btn-delete,
+.btn-delete {
+  background: rgba(108, 117, 125, 0.3);
+  border: 1px solid rgba(108, 117, 125, 0.5);
+  color: #fff;
+  padding: 0.4rem 0.7rem;
+  font-size: 1rem;
+}
+
 .btn-cancel {
   background: rgba(108, 117, 125, 0.3);
   border: 1px solid rgba(108, 117, 125, 0.5);
   color: #fff;
   padding: 0.4rem 0.7rem;
-  font-size: 0.85rem;
+  font-size: 1rem;
 }
 
 .btn-delete:hover,
@@ -264,15 +283,27 @@ button:active {
 }
 
 .btn-delete-user {
-  background: rgba(220, 53, 69, 0.3);
-  border: 1px solid rgba(220, 53, 69, 0.5);
+  background: rgba(108, 117, 125, 0.3);
+  border: 1px solid rgba(108, 117, 125, 0.5);
+  color: #fff;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+.btn-delete-user:hover {
+  background: rgba(108, 117, 125, 0.5);
+}
+
+.btn-edit-user {
+  background: rgba(0, 123, 255, 0.3);
+  border: 1px solid rgba(0, 123, 255, 0.5);
   color: #fff;
   padding: 0.4rem 0.7rem;
   font-size: 0.85rem;
 }
 
-.btn-delete-user:hover {
-  background: rgba(220, 53, 69, 0.5);
+.btn-edit-user:hover {
+  background: rgba(0, 123, 255, 0.5);
 }
 
 .producto input {
@@ -288,18 +319,45 @@ button:active {
 
 
 .btn-export {
-  background: rgba(40, 167, 69, 0.3);
+  background: #295244;
   border: 1px solid rgba(40, 167, 69, 0.5);
   color: white;
+  font-size: 1rem;
 }
 
 .btn-export:hover {
   background: rgba(40, 167, 69, 0.5);
 }
 
+.busqueda {
+  margin-bottom: 1.5rem;
+}
+
+.busqueda input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  color: #e4e4e7;
+}
+
+.btn-export:hover {
+  background: rgba(40, 167, 69, 0.5);
+}
+
+.busqueda {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .producto input:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: white;
 }
 
 .checkbox-wrapper {
@@ -316,7 +374,7 @@ button:active {
 }
 
 .checkbox-wrapper:hover {
-  border-color: rgba(0, 123, 255, 0.5);
+  border-color: white;
   background: rgba(255, 255, 255, 0.12);
 }
 
@@ -384,7 +442,7 @@ button:active {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 6px;
   font-size: 0.95rem;
-  background: #4c4f61;
+  background: rgba(255, 255, 255, 0.08);
   color: #fff;
 }
 
@@ -395,6 +453,12 @@ button:active {
   font-size: 0.95rem;
   background: rgba(255, 255, 255, 0.1);
   color: #e4e4e7;
+  width: 100%;
+}
+
+.campo select option {
+  background: #1a1a2e;
+  color: #e4e4e7;
 }
 
 .form-row {
@@ -404,25 +468,64 @@ button:active {
   align-items: flex-end;
 }
 
+.form-row .campo {
+  flex: 1;
+  min-width: 120px;
+}
+
+.form-row .campo.descripcion-campo {
+  flex-basis: 100%;
+}
+
+.form-row .campo.descripcion-campo textarea {
+  min-height: 80px;
+}
+
 .card.producto .checkbox-wrapper {
-  margin-top: 0.5rem;
+  margin-bottom: 1.2rem;
 }
 
 .edit-row {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 0.75rem;
+}
+
+.edit-row .campo {
+  flex: 1;
+  min-width: 120px;
+}
+
+.edit-row .campo.textarea-campo {
+  flex-basis: 100%;
+}
+
+.edit-row .campo textarea {
+  min-height: 80px;
+}
+
+.edit-row .acciones {
+  flex-basis: 100%;
+  margin-top: 0.5rem;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
-.user-info span {
-  color: #000000;
-  font-size: 0.95rem;
+.user-info h4 {
+  color: #e4e4e7;
+  margin: 0;
+}
+
+.user-info .badge-rol {
+  background: rgba(255, 193, 7, 0.3);
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
 }
 
 .modal {
@@ -431,7 +534,7 @@ button:active {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -439,40 +542,59 @@ button:active {
 }
 
 .modal-content {
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
   padding: 2rem;
   border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .modal-content h3 {
-  margin: 0 0 1.5rem;
-  color: #333;
+  margin: 0 0 1rem;
+  color: #fff;
+  font-size: 1.25rem;
+}
+
+.modal-content p {
+  color: #a1a1aa;
+  margin-bottom: 1.5rem;
 }
 
 .modal-acciones {
   display: flex;
   gap: 1rem;
   justify-content: center;
+  margin-top: 30px;
 }
 
 .btn-confirmar {
-  background: #dc3545;
+  background: rgba(220, 53, 69, 0.3);
+  border: 1px solid rgba(220, 53, 69, 0.5);
   color: white;
   padding: 0.75rem 1.5rem;
-  border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-confirmar:hover {
+  background: rgba(220, 53, 69, 0.5);
 }
 
 .btn-cancelar-modal {
-  background: #6c757d;
+  background: rgba(108, 117, 125, 0.3);
+  border: 1px solid rgba(108, 117, 125, 0.5);
   color: white;
   padding: 0.75rem 1.5rem;
-  border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-cancelar-modal:hover {
+  background: rgba(108, 117, 125, 0.5);
 }
 
 .busqueda {
@@ -481,14 +603,14 @@ button:active {
 }
 
 .busqueda input {
-  width: 100%;
+  flex: 1;
   padding: 0.75rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  background: #4c4f61;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   font-size: 1rem;
   box-sizing: border-box;
-  color: #fff;
+  color: #e4e4e7;
 }
 
 .busqueda input:focus {
@@ -521,24 +643,42 @@ button:active {
   min-width: 140px;
 }
 
+.filtro-wrapper select option {
+  background: #1a1a2e;
+  color: #e4e4e7;
+}
+
 .filtro-wrapper select:focus {
   outline: none;
-  border-color: rgba(0, 123, 255, 0.5);
+  border-color: white;
 }
 
 .tri-state-filter {
   display: inline-flex;
-  gap: 6px;
+  gap: 10px;
 }
+
+.tri-state-container {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .tri-state-filter button {
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  background: #fff;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  color: #e4e4e7;
   cursor: pointer;
+  border-radius: 6px;
 }
+
+.tri-state-filter button:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
 .tri-state-filter button.active {
-  background: #e9e9e9;
-  font-weight: bold;
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .panel-admin {
@@ -548,7 +688,7 @@ button:active {
   border-radius: 12px;
   margin-bottom: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-left: 4px solid rgba(255, 193, 7, 0.5);
+  border-left: 4px solid #bf9517;
 }
 
 .panel-admin h2 {
@@ -565,11 +705,15 @@ button:active {
 
 .card-usuario {
   background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 1rem;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-usuario:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .card-usuario p {
@@ -585,18 +729,18 @@ button:active {
 .badge-rol {
   background: rgba(255, 193, 7, 0.3);
   border: 1px solid rgba(255, 193, 7, 0.5);
-  padding: 2px 8px;
+  padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.8rem;
   font-weight: normal;
-  color: #fff !important;
+  color: #fff;
 }
 
 .badge-rol-user {
   background: rgba(255, 193, 7, 0.3);
   border: 1px solid rgba(255, 193, 7, 0.5);
   color: white;
-  padding: 2px 8px;
+  padding: 4px 8px;
   border-radius: 4px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
