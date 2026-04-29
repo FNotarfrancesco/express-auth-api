@@ -2,7 +2,7 @@
   <header>
     <h1>Mis Productos</h1>
     <div class="user-info">
-      <h4>Hola, {{ usuario?.name }} <span class="badge-rol"> {{ usuario?.rol }} </span></h4>
+      <h4>Hola, {{ usuario?.name }}   |   <span class="badge-rol"> {{ usuario?.rol }}</span>    |   </h4>
       <button (click)="logout()" class="btn-logout">Cerrar Sesión</button>
     </div>
   </header>
@@ -13,12 +13,12 @@
     <div class="usuarios-grid">
       <div *ngFor="let user of usuarios" class="card-usuario">
         <div *ngIf="editandoUsuarioId !== user._id">
-          <p><strong>Nombre:</strong> {{ user.name }}</p>
-          <p><strong>Email:</strong> {{ user.email }}</p>
-          <p><strong>Rol:</strong> <span class="badge-rol-user">{{ user.rol }}</span></p>
+          <p><strong>Nombre: </strong> {{ user.name }}</p>
+          <p><strong>Email: </strong> {{ user.email }}</p>
+          <p><strong>Rol: </strong> <span class="badge-rol-user">{{ user.rol }}</span></p>
           <div class="acciones">
-            <button (click)="iniciarEdicionUsuario(user)" class="btn-edit">Cambiar Rol</button>
-            <button (click)="eliminarUsuario(user)" class="btn-delete-user">Eliminar usuario</button>
+            <button (click)="iniciarEdicionUsuario(user)" class="btn-edit" title="Cambiar Rol">✎ Rol</button>
+            <button (click)="eliminarUsuario(user)" class="btn-delete-user" title="Eliminar usuario">🗑️ Eliminar</button>
           </div>
         </div>
         <div *ngIf="editandoUsuarioId === user._id">
@@ -77,7 +77,7 @@
 
   <!-- Formulario para crear (solo admin/editor) -->
   <div class="card crear" *ngIf="puedeEditar">
-    <h3>Nuevo Producto</h3>
+    <h2>Nuevo Producto</h2>
     <div class="form-row">
       <div class="campo">
         <label>Nombre</label>
@@ -169,8 +169,8 @@
           {{ producto.disponible ? 'Disponible' : 'No disponible' }}
         </p>
         <div class="acciones" *ngIf="puedeEditar">
-          <button (click)="iniciarEdicion(producto)" class="btn-edit">Editar</button>
-          <button (click)="eliminarProducto(producto._id)" class="btn-delete" *ngIf="puedeEliminar">Eliminar</button>
+          <button (click)="iniciarEdicion(producto)" class="btn-edit">✎ Editar</button>
+          <button (click)="eliminarProducto(producto._id)" class="btn-delete" *ngIf="puedeEliminar">🗑️ Eliminar</button>
         </div>
       </div>
 
