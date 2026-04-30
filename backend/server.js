@@ -43,7 +43,7 @@ app.use(session({
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ mongoUrl: MONGO_URL }),
+  store: null, // Sin MongoStore por ahora
   cookie: {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: false,
