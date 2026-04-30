@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(express.static('./public'))
 app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 app.use(mongoSanitize())
 
 app.use(session({
@@ -48,7 +48,7 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
+    sameSite: 'lax'
   }
 }))
 
