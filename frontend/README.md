@@ -1,59 +1,150 @@
-# Frontend
+# 📌 Mis Productos - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.2.
+Aplicación Angular para gestión de productos con panel de administración de usuarios.
 
-## Development server
+## 🚀 Setup Local
 
-To start a local development server, run:
+### Requisitos previos
+- Node. js v18+
+- npm o yarn
+- Backend API corriendo en `http://localhost:80`
+- MongoDB (local o Atlas)
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Instalación
 
 ```bash
-ng generate component component-name
+# 1. Clonar repositorio
+git clone <repo-url>
+cd frontend
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Iniciar en desarrollo
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+La app estará disponible en `http://localhost:4200`
 
+## 🔧 Configuración
+
+### Variables de entorno (environment.ts)
+El archivo `src/environments/environment.ts` contiene la URL del API:
+
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:80/api'
+}
+```
+
+### Credenciales de prueba
+El sistema incluye botones de demo para login rápido:
+
+| Rol | Email | Contraseña |
+|----|-------|------------|
+| Admin | `admin@example.com` | `admin123+` |
+| Editor | `editor@example.com` | `editor123+` |
+| Viewer | `viewer@example.com` | `viewer123+` |
+
+> **Nota:** Estas credenciales son solo para desarrollo. Registrar nuevos usuarios requiere el código de registro configurado en el backend.
+
+## 📂 Estructura del Proyecto
+
+```
+frontend/src/app/
+├── guards/         # Route guards (auth)
+├── pages/
+│   ├── dashboard/   # Dashboard principal
+│   ├── login/      # Página de login
+│   └── register/  # Página de registro
+├── services/       # Servicios HTTP
+│   ├── auth. ts     # Servicio de autenticación
+│   └── productos. ts # Servicio de productos
+├── app. component  # Root component
+├── app. routes. ts  # Rutas
+└── app. config. ts  # Configuraciones
+```
+
+## 🏃 Correr en Producción
+
+### Build
 ```bash
-ng generate --help
+npm run build
 ```
 
-## Building
+Los archivos compilados se generan en `dist/`
 
-To build the project run:
+## 📱 Funcionalidades
 
-```bash
-ng build
-```
+### Dashboard
+- [x] Listado de productos con filtros
+- [x] Filtro por categoría
+- [x] Filtro por disponibilidad (Todos/Disponible/No disponible)
+- [x] Ordenar por precio (mayor/menor) o nombre (A-Z/Z-A)
+- [x] Búsqueda por nombre
+- [x] Crear nuevo producto (editor/admin)
+- [x] Editar producto (editor/admin)
+- [x] Eliminar producto (admin)
+- [x] Exportar productos a CSV (editor/admin)
+- [x] Modal de confirmación para eliminar
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Panel de Administración (admin)
+- [x] Ver lista de usuarios
+- [x] Cambiar rol de usuario (admin/editor/viewer)
+- [x] Eliminar usuario
 
-## Running unit tests
+### Login/Register
+- [x] Login con email y contraseña
+- [x] Registro con código de invitación
+- [x] Demo login (botones para cada rol)
+- [x] Mensajes de error
+- [x] Modal de logout con confirmación
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## 🎨 Diseño
 
-```bash
-ng test
-```
+- **Dark Mode** con tema glassmorphism
+- **Responsive** (en desarrollo)
+- **Paleta de colores:**
+  - Fondo: `#1a1a2e` → `#16213e`
+  - Cards: `rgba(255, 255, 255, 0.08)`
+  - Texto: `#e4e4e7`
+  - Acentos: Verde (`#28a745`), Azul (`#007bff`), Amarillo (`#ffc107`)
 
-## Running end-to-end tests
+## 🔐 Control de Acceso por Rol
 
-For end-to-end (e2e) testing, run:
+| Funcionalidad | Viewer | Editor | Admin |
+|---------------|--------|--------|-------|
+| Ver productos | ✅ | ✅ | ✅ |
+| Usar filtros/búsqueda | ✅ | ✅ | ✅ |
+| Exportar CSV | ✅ | ✅ | ✅ |
+| Crear producto | ❌ | ✅ | ✅ |
+| Editar producto | ❌ | ✅ | ✅ |
+| Eliminar producto | ❌ | ❌ | ✅ |
+| Gestionar usuarios | ❌ | ❌ | ✅ |
 
-```bash
-ng e2e
-```
+## 🛠️ Technologies
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+| Technology | Versión | Uso |
+|-------------|--------|-----|
+| Angular | 21.x | Framework frontend |
+| TypeScript | 5.x | Lenguaje |
+| RxJS | 7.x | Programación reactiva |
+| Angular CLI | 21.x | Herramienta CLI |
+| SCSS | - | Estilos |
 
-## Additional Resources
+## 🌐 Backend Requerido
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Este frontend requiere el backend de Mis Productos corriendo. Ver [backend README](../backend/README.md)
+
+## 🤝 Contributing
+
+1. Fork el repo
+2. Crear branch (`git checkout -b feature/nueva-funcion`)
+3. Commit (`git commit -m 'Agregar nueva función'`)
+4. Push (`git push origin feature/nueva-funcion`)
+5. Abrir Pull Request
+
+## 📝 Licencia
+
+ISC
