@@ -197,6 +197,14 @@ cerrarModalEliminarUsuario() {
 
     if (!this.nuevoProducto.nombre || !this.nuevoProducto.precio) return;
 
+    if (this.nuevoProducto.stock < 0) {
+      this.nuevoProducto.stock = 0;
+    }
+
+    if (this.nuevoProducto.precio < 0) {
+      this.nuevoProducto.precio = 0;
+    }
+
     this.productosService.create(this.nuevoProducto).subscribe({
       next: () => {
         this.nuevoProducto = { nombre: '', descripcion: '', precio: 0, categoria: '', stock: 0, disponible: true };
@@ -215,6 +223,14 @@ cerrarModalEliminarUsuario() {
     this.editandoProducto.nombre = this.editandoProducto.nombre.trim();
 
     if (!this.editandoId) return;
+
+    if (this.editandoProducto.stock < 0) {
+      this.editandoProducto.stock = 0;
+    }
+
+    if (this.editandoProducto.precio < 0) {
+      this.editandoProducto.precio = 0;
+    }
 
     this.productosService.update(this.editandoId, this.editandoProducto).subscribe({
       next: () => {
