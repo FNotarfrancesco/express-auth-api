@@ -25,7 +25,7 @@ if (!MONGO_URL || !SESSION_SECRET) {
 
 app.use(helmet())
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGIN || 'http://localhost:4200',
+  origin: process.env.ALLOWED_ORIGIN,
   credentials: true
 }))
 
@@ -46,9 +46,9 @@ app.use(session({
   store: MongoStore.create({ mongoUrl: MONGO_URL }),
   cookie: {
     maxAge: 24 * 60 * 60 * 1000,
-    httpOnly: false,
-    secure: false,
-    sameSite: 'lax'
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none'
   }
 }))
 
