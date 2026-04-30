@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'https://express-auth-api-u3p2.onrender.com/api/v1/productos';
+  private apiUrl = 'https://express-auth-api-u3p2.onrender.com/api/auth';
 
   constructor(private http: HttpClient) {}
 
