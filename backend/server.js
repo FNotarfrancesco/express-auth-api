@@ -42,8 +42,8 @@ app.use(mongoSanitize())
 app.use(session({
   secret: SESSION_SECRET,
   resave: false,
-  saveUninitialized: false,
-  store: null, // Sin MongoStore por ahora
+  saveUninitialized: true, // Cambiar a true
+  store: null,
   cookie: {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: false,
