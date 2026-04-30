@@ -1,7 +1,6 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist/frontend",
-  "rootDirectory": "frontend",
   "framework": "angular",
   "rewrites": [
     {
