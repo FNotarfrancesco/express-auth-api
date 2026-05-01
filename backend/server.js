@@ -45,10 +45,10 @@ app.use(session({
   saveUninitialized: true,
   store: null,
   cookie: {
-    maxAge: 24 * 60 * 60 * 1000,
-    httpOnly: true,
-    secure: false,
-    sameSite: 'lax'
+    maxAge: 24 * 60 * 60 * 1_000,
+    httpOnly: false,
+    secure: true,
+    sameSite: 'none'
   }
 }))
 
