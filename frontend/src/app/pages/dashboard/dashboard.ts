@@ -273,13 +273,8 @@ cerrarModalEliminarUsuario() {
 
   confirmarLogout() {
     this.mostrarModalLogout = false;
-    this.authService.logout().subscribe({
-      next: () => {
-        localStorage.removeItem('user');
-        this.router.navigate(['/login']);
-      },
-      error: (err) => console.error(err)
-    });
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   cerrarModalLogout() {
