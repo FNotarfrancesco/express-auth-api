@@ -1,4 +1,3 @@
-import passport from 'passport'
 import usuarioModelos from '../models/usuarios.models.js'
 import dotenv from 'dotenv'
 import { generateToken } from '../utils/jwt.utils.js'
@@ -46,25 +45,28 @@ const register = async (req, res) => {
 // LOGIN
 // ===============================
 
-const loginApi = (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) return res. status(500).json({ errors: ['Error del servidor'] })
-    if (!user) return res.status(401).json({ errors: [info?.message || 'Credenciales inválidas'] })
-    
-    const token = generateToken(user)
-    return res.json({ message: 'Login exitoso', token, user: { id: user._id, name: user.name, email: user.email, rol: user.rol } })
-  })(req, res, next)
-}
+const loginApi = async (req, res) => {
+  const { email, password } = req.body
 
-// ===============================
-// LOGOUT
-// ===============================
+  if (!email || !password) {
+    return res.status(400).json({ errors: ['Email y contraseña requeridos'] })
+  }
 
-const logout = (req, res, next) => {
-  req.logout(err => {
-    if (err) return next(err)
-    req.session.destroy()
-    res.json({ message: 'Sesión cerrada' })
+  const usuario = await usuarioModelos.obtenerUsuarioPorEmail(email)
+  if (!usuario) {
+    return res.status(401).json({ errors: ['Credenciales inválidas'] })
+  }
+
+  const passwordCorrecto = await usuarioModelos.revisarPassword(usuario, password)
+  if (!passwordCorrecto) {
+    return res.status(401).json({ errors: ['Credenciales inválidas'] })
+  }
+
+  const token = generateToken(usuario)
+  res.json({
+    message: 'Login exitoso',
+    token,
+    user: { id: usuario._id, name: usuario.name, email: usuario.email, rol: usuario.rol }
   })
 }
 
@@ -130,7 +132,6 @@ const eliminarUsuario = async (req, res) => {
 export default {
   register,
   loginApi,
-  logout,
   obtenerTodosLosUsuarios,
   actualizarRolUsuario,
   eliminarUsuario

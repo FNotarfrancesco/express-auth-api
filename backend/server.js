@@ -5,10 +5,6 @@ import dbConnection from './utils/db-connection.js'
 import routerUsuarios from './routers/usuarios.routers.js'
 import routerProductosApi from './routers/productos.api.routers.js'
 import helmet from 'helmet'
-import session from 'express-session'
-import MongoStore from 'connect-mongo'
-import passport from 'passport'
-import * as passportStragegy from './utils/handle-passport.js'
 import cors from 'cors'
 import errorHandler from './middlewares/error-handler.middleware.js'
 import mongoSanitize from 'express-mongo-sanitize'
@@ -17,16 +13,16 @@ import mongoSanitize from 'express-mongo-sanitize'
 const app = express()
 const PORT = process.env.PORT || 8080
 const MONGO_URL = process.env.MONGO_URL
-const SESSION_SECRET = process.env.SESSION_SECRET
+const JWT_SECRET = process.env.JWT_SECRET
 
-if (!MONGO_URL || !SESSION_SECRET) {
-  throw new Error('Faltan variables de entorno requeridas')
+if (!MONGO_URL || !JWT_SECRET) {
+  throw new Error('Faltan variables de entorno requeridas: MONGO_URL, JWT_SECRET')
 }
 
 app.use(helmet())
 app.use(cors({
   origin: process.env.ALLOWED_ORIGIN,
-  credentials: true,
+  credentials: false,
 }))
 
 // Solo aplicamos el limitador si estamos en producción
@@ -38,22 +34,6 @@ app.use(express.static('./public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(mongoSanitize())
-
-app.use(session({
-  secret: SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  store: null,
-  cookie: {
-    maxAge: 24 * 60 * 60 * 1_000,
-    httpOnly: false,
-    secure: true,
-    sameSite: 'none'
-  }
-}))
-
-app.use(passport.initialize())
-app.use(passport.session())
 
 app.use('/', routerUsuarios)
 app.use('/', routerProductosApi)
