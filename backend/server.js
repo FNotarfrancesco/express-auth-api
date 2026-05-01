@@ -26,7 +26,9 @@ if (!MONGO_URL || !SESSION_SECRET) {
 app.use(helmet())
 app.use(cors({
   origin: process.env.ALLOWED_ORIGIN,
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
 // Solo aplicamos el limitador si estamos en producción
