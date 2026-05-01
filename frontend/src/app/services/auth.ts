@@ -25,10 +25,9 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, { email, password });
   }
 
-  logout(): Observable<any> {
+  logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    return this.http.get(`${this.apiUrl}/users`);
   }
 
   getAllUsers(): Observable<any> {
