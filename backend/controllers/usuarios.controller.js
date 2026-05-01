@@ -1,7 +1,7 @@
 import passport from 'passport'
 import usuarioModelos from '../models/usuarios.models.js'
 import dotenv from 'dotenv'
-import { generateToken } from '../utils/jwt.utils. js'
+import { generateToken } from '../utils/jwt.utils.js'
 dotenv.config()
 
 // ===============================
