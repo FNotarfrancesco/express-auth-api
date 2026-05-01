@@ -1,6 +1,7 @@
 import passport from 'passport'
 import usuarioModelos from '../models/usuarios.models.js'
 import dotenv from 'dotenv'
+import { generateToken } from '../utils/jwt.utils. js'
 dotenv.config()
 
 // ===============================
@@ -47,13 +48,11 @@ const register = async (req, res) => {
 
 const loginApi = (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
-    if (err) return res.status(500).json({ errors: ['Error del servidor'] })
+    if (err) return res. status(500).json({ errors: ['Error del servidor'] })
     if (!user) return res.status(401).json({ errors: [info?.message || 'Credenciales inválidas'] })
     
-    req.logIn(user, (err) => {
-      if (err) return res.status(500).json({ errors: ['Error al iniciar sesión'] })
-      return res.json({ message: 'Login exitoso', user: { id: user._id, name: user.name, email: user.email, rol: user.rol } })
-    })
+    const token = generateToken(user)
+    return res.json({ message: 'Login exitoso', token, user: { id: user._id, name: user.name, email: user.email, rol: user.rol } })
   })(req, res, next)
 }
 
