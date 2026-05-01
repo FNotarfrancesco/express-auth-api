@@ -27,8 +27,6 @@ app.use(helmet())
 app.use(cors({
   origin: process.env.ALLOWED_ORIGIN,
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
 // Solo aplicamos el limitador si estamos en producción
@@ -44,13 +42,13 @@ app.use(mongoSanitize())
 app.use(session({
   secret: SESSION_SECRET,
   resave: false,
-  saveUninitialized: true, // Cambiar a true
+  saveUninitialized: true,
   store: null,
   cookie: {
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: false,
-    sameSite: 'none'
+    sameSite: 'lax'
   }
 }))
 
