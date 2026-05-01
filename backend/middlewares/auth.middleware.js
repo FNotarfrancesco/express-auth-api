@@ -1,13 +1,20 @@
-import { verifyToken } from '../utils/jwt.utils. js'
+import { verifyToken } from '../utils/jwt.utils.js'
 
-export const authJWT = (req, res, next) => {     const token = req.headers.authorization?.replace('Bearer ', '')    
-    if (!token) {
-        return res.status(401).json({ error: 'Token requerido' })    }
+export const authJWT = (req, res, next) => {
+    const authHeader = req.headers.authorization
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Token requerido' })
+    }
     
-    const decoded = verifyToken(token)    
+    const token = authHeader.replace('Bearer ', '')
+    const decoded = verifyToken(token)
+    
     if (!decoded) {
-        return res.status(401).json({ error: 'Token inválido' })    }
+        return res.status(401).json({ error: 'Token inválido' })
+    }
     
     req.user = decoded
-    next()}
+    next()
+}
+
 export default authJWT
