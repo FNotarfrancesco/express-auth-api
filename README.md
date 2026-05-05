@@ -2,6 +2,8 @@
 
 Aplicación full-stack para gestión de productos con sistema de usuarios y roles.
 
+⚠️ Importante: Debido a que el backend utiliza el plan gratuito de Render, la instancia se suspende tras 15 minutos de inactividad. Si es la primera vez que ingresas o pasó un tiempo, la aplicación puede tardar entre 30 y 60 segundos en responder mientras el servidor se "despierta". ¡Gracias por la paciencia!
+
 ## 🏗️ Arquitectura
 
 ```
