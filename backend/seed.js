@@ -2,22 +2,18 @@ import mongoose from 'mongoose'
 import 'dotenv/config'
 import './models/usuarios.models.js'
 import './models/productos.models.js'
-import bcrypt from 'bcrypt'
 import usuarioModelos from './models/usuarios.models.js'
 
 const seedDemoData = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URL)
-    console.log('[Seed] Conectado a MongoDB')
+    console.log('[Seed] Limpiando colecciones para demo...')
 
-    // --- Limpiar colecciones ---
     const Usuario = mongoose.model('usuarios')
     const Producto = mongoose.model('productos')
     await Usuario.deleteMany({})
     await Producto.deleteMany({})
     console.log('[Seed] Colecciones limpiadas')
 
-    // --- Crear usuarios demo ---
     const demoUsers = [
       { name: 'Admin', email: 'admin@example.com', password: 'admin123+', rol: 'admin' },
       { name: 'Editor', email: 'editor@example.com', password: 'editor123+', rol: 'editor' },
@@ -29,7 +25,6 @@ const seedDemoData = async () => {
       console.log(`[Seed] Usuario demo creado: ${user.email}`)
     }
 
-    // --- Crear productos demo ---
     const demoProducts = [
       { nombre: 'Asus Zenbook a14', categoria: 'Notebooks', disponible: true, stock: 5, precio: 1500000 },
       { nombre: 'AMD Ryzen 5 3400G', categoria: 'Procesadores', disponible: true, stock: 4, precio: 107150 },
@@ -44,11 +39,9 @@ const seedDemoData = async () => {
     await Producto.insertMany(demoProducts)
     console.log('[Seed] 9 productos demo creados')
 
-    await mongoose.disconnect()
     console.log('[Seed] Completado - App lista para demo')
   } catch (error) {
     console.error('[Seed] Error:', error.message)
-    process.exit(1)
   }
 }
 

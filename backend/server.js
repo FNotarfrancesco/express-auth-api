@@ -43,6 +43,6 @@ app.use(errorHandler)
 
 app.listen(PORT, async () => {
   console.log(`Aplicación funcionando: http://localhost:${PORT}`)
-  dbConnection(MONGO_URL)
+  await dbConnection(MONGO_URL)
   await seedDemoData()
 })
