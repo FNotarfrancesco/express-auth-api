@@ -2,6 +2,7 @@ import express from 'express'
 import 'dotenv/config'
 import { globalLimiter } from './middlewares/rate-limit.middleware.js'
 import dbConnection from './utils/db-connection.js'
+import seedDemoData from './seed.js'
 import routerUsuarios from './routers/usuarios.routers.js'
 import routerProductosApi from './routers/productos.api.routers.js'
 import helmet from 'helmet'
@@ -40,7 +41,8 @@ app.use('/', routerProductosApi)
 
 app.use(errorHandler)
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Aplicación funcionando: http://localhost:${PORT}`)
   dbConnection(MONGO_URL)
+  await seedDemoData()
 })

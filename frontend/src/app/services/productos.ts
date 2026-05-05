@@ -10,34 +10,32 @@ export class ProductosService {
 
   constructor(private http: HttpClient) { }
 
-  private getHeaders(): HttpHeaders {
+    private getHeaders() {
     const token = localStorage.getItem('token');
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+    return { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) };
   }
 
   getAll(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() });
+    return this.http.get<any[]>(this.apiUrl, { withCredentials: true });
   }
 
   getById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+    return this.http.get(`${this.apiUrl}/${id}`, { withCredentials: true });
   }
 
   create(producto: any): Observable<any> {
-    return this.http.post(this.apiUrl, producto, { headers: this.getHeaders() });
+    return this.http.post(this.apiUrl, producto, { withCredentials: true });
   }
 
   update(id: string, producto: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, producto, { headers: this.getHeaders() });
+    return this.http.put(`${this.apiUrl}/${id}`, producto, { withCredentials: true });
   }
 
   delete(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+    return this.http.delete(`${this.apiUrl}/${id}`, { withCredentials: true });
   }
 
   exportarCSV(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/export`, { headers: this.getHeaders(), responseType: 'text' });
+    return this.http.get(`${this.apiUrl}/export`, { withCredentials: true, responseType: 'text' });
   }
 }
