@@ -23,7 +23,7 @@ if (!MONGO_URL || !JWT_SECRET) {
 app.use(helmet())
 app.use(cors({
   origin: process.env.ALLOWED_ORIGIN,
-  credentials: false,
+  credentials: true,
 }))
 
 // Solo aplicamos el limitador si estamos en producción
