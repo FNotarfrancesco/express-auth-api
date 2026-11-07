@@ -1,6 +1,6 @@
 ---
 name: Mis Productos
-description: Sistema de manifiesto de inventario y despacho portuario con control de acceso por roles (Harbor Clearance & Manifest Ledger).
+description: Sistema de gestión de inventario y catálogo de productos con control de acceso por roles.
 colors:
   primary: "#0D1B2A"
   primary-elevated: "#15263B"

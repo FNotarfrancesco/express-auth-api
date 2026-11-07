@@ -12,7 +12,7 @@
         </div>
         <div class="brand-titles">
           <h1>Mis Productos</h1>
-          <p class="brand-subtitle">Manifiesto de Inventario y Despacho</p>
+          <p class="brand-subtitle">Gestión y Control de Inventario</p>
         </div>
       </div>
 
@@ -376,7 +376,7 @@
           No se encontraron registros que coincidan con los filtros activos{{ terminoBusqueda ? ' para "' + terminoBusqueda + '"' : '' }}.
         </ng-container>
         <ng-container *ngIf="!terminoBusqueda && !categoriaSeleccionada && statusFiltro === 'todos'">
-          El manifiesto no registra productos todavía. Utilizá el formulario superior para dar de alta el primer ítem.
+          El sistema no registra productos todavía. Utilizá el formulario superior para dar de alta el primer ítem.
         </ng-container>
       </p>
     </div>
@@ -410,7 +410,7 @@
   <div class="modal" *ngIf="mostrarModalEliminar" role="dialog" aria-modal="true" aria-labelledby="modal-del-prod-title">
     <div class="modal-content">
       <h3 id="modal-del-prod-title">¿Seguro que querés eliminar este producto?</h3>
-      <p>El registro será retirado definitivamente del manifiesto de inventario. Esta acción no se puede deshacer.</p>
+      <p>El registro será retirado definitivamente del inventario. Esta acción no se puede deshacer.</p>
       <div class="modal-acciones">
         <button type="button" (click)="cerrarModalEliminar()" class="btn-cancelar-modal">Cancelar</button>
         <button type="button" (click)="confirmarEliminar()" class="btn-confirmar">Eliminar registro</button>
