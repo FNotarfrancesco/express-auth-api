@@ -45,4 +45,11 @@ app.listen(PORT, async () => {
   console.log(`Aplicación funcionando: http://localhost:${PORT}`)
   await dbConnection(MONGO_URL)
   await seedDemoData()
+
+  // Restablece automáticamente los datos demo periódicamente (por defecto cada 60 minutos)
+  const resetMinutos = Number(process.env.RESET_INTERVAL_MINUTES) || 60
+  setInterval(async () => {
+    console.log(`[Seed] Ejecutando reseteo periódico programado de datos demo (${resetMinutos} min)...`)
+    await seedDemoData()
+  }, resetMinutos * 60 * 1000)
 })
