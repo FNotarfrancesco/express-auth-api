@@ -70,7 +70,34 @@ export class Dashboard implements OnInit {
   }
 
   get puedeEliminar(): boolean {
-  return this.usuario?.rol === 'admin';
+    return this.usuario?.rol === 'admin';
+  }
+
+  get totalProductos(): number {
+    return this.productos.length;
+  }
+
+  get totalDisponibles(): number {
+    return this.productos.filter(p => p.disponible).length;
+  }
+
+  get totalNoDisponibles(): number {
+    return this.productos.filter(p => !p.disponible).length;
+  }
+
+  get stockTotalUnidades(): number {
+    return this.productos.reduce((acc, p) => acc + (Number(p.stock) || 0), 0);
+  }
+
+  getStockPercent(stock: number): number {
+    const val = Number(stock) || 0;
+    if (val <= 0) return 0;
+    const maxStock = Math.max(50, ...this.productos.map(p => Number(p.stock) || 0));
+    return Math.min(100, Math.max(8, Math.round((val / maxStock) * 100)));
+  }
+
+  formatIndex(index: number): string {
+    return '#' + String(index + 1).padStart(3, '0');
   }
 
   cargarUsuarios() {

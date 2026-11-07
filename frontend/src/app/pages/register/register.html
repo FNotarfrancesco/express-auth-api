@@ -1,39 +1,111 @@
-<div class="container">
-  <div class="card">
-    <h2>Registrarse</h2>
-
-    <div *ngIf="error" class="error">{{ error }}</div>
-    <div *ngIf="success" class="success">{{ success }}</div>
-
-    <form (ngSubmit)="onRegister()">
-      <div class="form-group">
-        <label>Nombre</label>
-        <input type="text" [(ngModel)]="name" name="name" required>
+<div class="auth-viewport">
+  <div class="auth-ledger">
+    <!-- Columna Izquierda: Deep Harbor Navy Clearance Brief -->
+    <aside class="auth-brief-panel">
+      <div class="brief-top">
+        <div class="brand-lockup">
+          <div class="brand-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z"/>
+              <path d="M3 7l9 5 9-5"/>
+              <path d="M12 22V12"/>
+            </svg>
+          </div>
+          <h1>Mis Productos</h1>
+        </div>
+        <p class="brief-description">
+          Alta de operadores en el sistema de manifiesto de inventario. El acceso requiere validación mediante código de invitación autorizado.
+        </p>
       </div>
 
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" [(ngModel)]="email" name="email" required>
+      <div class="clearance-protocol">
+        <h3 class="protocol-title">Jerarquía de Permisos</h3>
+        <div class="protocol-list">
+          <div class="protocol-row">
+            <span class="protocol-badge badge-viewer tabular-nums">VIEWER</span>
+            <p class="protocol-text">Asignado por defecto al registrarse. Permite consultar el catálogo, filtrar existencias y exportar reportes CSV.</p>
+          </div>
+          <div class="protocol-row">
+            <span class="protocol-badge badge-editor tabular-nums">EDITOR</span>
+            <p class="protocol-text">Habilitado por un administrador para registrar nuevos productos y actualizar precios o stock.</p>
+          </div>
+          <div class="protocol-row">
+            <span class="protocol-badge badge-admin tabular-nums">ADMIN</span>
+            <p class="protocol-text">Autoridad completa sobre el catálogo de productos y la asignación de roles de usuario.</p>
+          </div>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>Contraseña</label>
-        <input type="password" [(ngModel)]="password" name="password" required>
+      <div class="brief-footer tabular-nums">
+        <span>Registro protegido por código</span>
+        <span>Bcrypt · Sesiones MongoDB</span>
       </div>
+    </aside>
 
-      <div class="form-group">
-        <label>Confirmar Contraseña</label>
-        <input type="password" [(ngModel)]="confirm_password" name="confirm_password" required>
+    <!-- Columna Derecha: Warm Alabaster Registration Form -->
+    <main class="auth-form-panel">
+      <div class="form-panel-inner">
+        <h2>Crear Cuenta Operativa</h2>
+        <p class="form-lead">Completá tus datos y el código de invitación para dar de alta tu credencial.</p>
+
+        <div *ngIf="error" class="error" role="alert">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span>{{ error }}</span>
+        </div>
+
+        <div *ngIf="success" class="success" role="status">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>{{ success }}</span>
+        </div>
+
+        <form (ngSubmit)="onRegister()">
+          <div class="form-grid-two">
+            <div class="form-group">
+              <label for="reg-name">Nombre completo</label>
+              <input id="reg-name" type="text" [(ngModel)]="name" name="name" placeholder="Ej. Martín Gómez" autocomplete="name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="reg-email">Correo electrónico</label>
+              <input id="reg-email" type="email" [(ngModel)]="email" name="email" placeholder="martin@empresa.com" autocomplete="email" required>
+            </div>
+          </div>
+
+          <div class="form-grid-two">
+            <div class="form-group">
+              <label for="reg-password">Contraseña</label>
+              <input id="reg-password" type="password" [(ngModel)]="password" name="password" placeholder="Mín. 5 caracteres" autocomplete="new-password" required>
+            </div>
+
+            <div class="form-group">
+              <label for="reg-confirm">Confirmar contraseña</label>
+              <input id="reg-confirm" type="password" [(ngModel)]="confirm_password" name="confirm_password" placeholder="Repetir contraseña" autocomplete="new-password" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-code">Código de invitación</label>
+            <input id="reg-code" type="text" [(ngModel)]="code" name="code" class="tabular-nums" placeholder="Ingresá el código de autorización" required>
+          </div>
+
+          <button type="submit" class="submit">
+            Registrar Credencial
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </button>
+        </form>
+
+        <div class="auth-switch-bar">
+          <p>¿Ya tenés una cuenta activa? <a routerLink="/login">Inicia sesión</a></p>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label>Código de registro</label>
-        <input type="text" [(ngModel)]="code" name="code" required>
-      </div>
-
-      <button type="submit">Registrarse</button>
-    </form>
-
-    <p>¿Ya tenés una cuenta? <a routerLink="/login">Inicia sesión</a></p>
+    </main>
   </div>
 </div>

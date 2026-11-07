@@ -1,28 +1,100 @@
-<div class="container">
-  <div class="card">
-    <h2>Iniciar Sesión</h2>
-
-    <div *ngIf="error" class="error">{{ error }}</div>
-
-    <form (ngSubmit)="onLogin()">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" [(ngModel)]="email" name="email" required>
+<div class="auth-viewport">
+  <div class="auth-ledger">
+    <!-- Columna Izquierda: Deep Harbor Navy Clearance Brief & Demo Role Dispatch -->
+    <aside class="auth-brief-panel">
+      <div class="brief-top">
+        <div class="brand-lockup">
+          <div class="brand-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z"/>
+              <path d="M3 7l9 5 9-5"/>
+              <path d="M12 22V12"/>
+            </svg>
+          </div>
+          <h1>Mis Productos</h1>
+        </div>
+        <p class="brief-description">
+          Sistema de gestión de catálogo, control de existencias y despacho de permisos basado en roles (RBAC).
+        </p>
       </div>
 
-      <div class="form-group">
-        <label>Contraseña</label>
-        <input type="password" [(ngModel)]="password" name="password" required>
+      <!-- Signature Move: 3-Tier Role Clearance Dispatch Ledger -->
+      <div class="demo-clearance-section">
+        <h3 class="demo-section-title">Acceso Rápido de Evaluación (Demo)</h3>
+        <p class="demo-section-sub">Seleccioná un nivel de credencial para inspeccionar cómo se adapta la interfaz operativa:</p>
+
+        <div class="demo-login" role="group" aria-label="Cuentas de demostración por rol">
+          <button type="button" class="demo-button" (click)="loginDemo('admin')">
+            <div class="demo-btn-head">
+              <span class="demo-role-title">Ingresar como Admin</span>
+              <span class="demo-badge badge-admin tabular-nums">NIVEL 01 · ADMIN</span>
+            </div>
+            <span class="demo-role-desc">Control total de inventario, bajas y administración de usuarios.</span>
+          </button>
+
+          <button type="button" class="demo-button" (click)="loginDemo('editor')">
+            <div class="demo-btn-head">
+              <span class="demo-role-title">Ingresar como Editor</span>
+              <span class="demo-badge badge-editor tabular-nums">NIVEL 02 · EDITOR</span>
+            </div>
+            <span class="demo-role-desc">Alta de nuevos productos, actualización de precios y control de stock.</span>
+          </button>
+
+          <button type="button" class="demo-button" (click)="loginDemo('viewer')">
+            <div class="demo-btn-head">
+              <span class="demo-role-title">Ingresar como Viewer</span>
+              <span class="demo-badge badge-viewer tabular-nums">NIVEL 03 · VIEWER</span>
+            </div>
+            <span class="demo-role-desc">Auditoría de catálogo en modo lectura, filtros y exportación CSV.</span>
+          </button>
+        </div>
       </div>
 
-      <button type="submit" class="submit">Entrar</button>
-      <div class="demo-login">
-        <button type="button" class="demo-button" (click)="loginDemo('admin')">Ingresar como Admin (Demo)</button>
-        <button type="button" class="demo-button" (click)="loginDemo('editor')">Ingresar como Editor (Demo)</button>
-        <button type="button" class="demo-button" (click)="loginDemo('viewer')">Ingresar como Viewer (Demo)</button>
+      <div class="brief-footer tabular-nums">
+        <span>API REST v1 · Express + MongoDB</span>
+        <span>Sesiones firmadas</span>
       </div>
-    </form>
+    </aside>
 
-    <p>¿No tenés una cuenta? <a routerLink="/register">Registrate</a></p>
+    <!-- Columna Derecha: Warm Alabaster Credential Form -->
+    <main class="auth-form-panel">
+      <div class="form-panel-inner">
+        <h2>Iniciar Sesión</h2>
+        <p class="form-lead">Ingresá tus credenciales operativas para acceder al manifiesto de productos.</p>
+
+        <div *ngIf="error" class="error" role="alert">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span>{{ error }}</span>
+        </div>
+
+        <form (ngSubmit)="onLogin()">
+          <div class="form-group">
+            <label for="login-email">Correo electrónico</label>
+            <input id="login-email" type="email" [(ngModel)]="email" name="email" placeholder="operador@empresa.com" autocomplete="email" required>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Contraseña</label>
+            <input id="login-password" type="password" [(ngModel)]="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+          </div>
+
+          <button type="submit" class="submit">
+            Entrar al Sistema
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </form>
+
+        <div class="auth-switch-bar">
+          <p>¿No tenés una cuenta operativa? <a routerLink="/register">Solicitar registro</a></p>
+        </div>
+      </div>
+    </main>
   </div>
 </div>

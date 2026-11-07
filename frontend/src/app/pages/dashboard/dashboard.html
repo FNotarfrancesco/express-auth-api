@@ -1,225 +1,420 @@
-<div class="dashboard">
-  <header>
-    <h1>📌 Mis Productos</h1>
-    <div class="user-info">
-      <h4>Hola, {{ usuario?.name }}</h4>
-      <span class="badge-rol">{{ usuario?.rol }}</span>
-      <button (click)="logout()" class="btn-logout">Cerrar Sesión</button>
+<div class="workspace-shell">
+  <!-- Deep Harbor Navy Top Command Header & Clearance Strip -->
+  <header class="harbor-header">
+    <div class="harbor-header-inner">
+      <div class="brand-cluster">
+        <div class="brand-emblem" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L3 7v10l9 5 9-5V7l-9-5z"/>
+            <path d="M3 7l9 5 9-5"/>
+            <path d="M12 22V12"/>
+          </svg>
+        </div>
+        <div class="brand-titles">
+          <h1>Mis Productos</h1>
+          <p class="brand-subtitle">Manifiesto de Inventario y Despacho</p>
+        </div>
+      </div>
+
+      <!-- Signature Move: Live Manifest Telemetry & Clearance Strip -->
+      <div class="clearance-strip" role="status" aria-label="Resumen de inventario y nivel de acceso">
+        <div class="metric-cell">
+          <span class="metric-value tabular-nums">{{ totalProductos }}</span>
+          <span class="metric-label">Registros</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-value metric-emerald tabular-nums">{{ totalDisponibles }}</span>
+          <span class="metric-label">Disponibles</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-value metric-coral tabular-nums">{{ totalNoDisponibles }}</span>
+          <span class="metric-label">Retenidos</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-value tabular-nums">{{ stockTotalUnidades }}</span>
+          <span class="metric-label">Unidades</span>
+        </div>
+      </div>
+
+      <div class="user-info">
+        <div class="operator-badge">
+          <span class="operator-name">Hola, {{ usuario?.name || 'Operador' }}</span>
+          <span class="badge-rol" [attr.data-role]="usuario?.rol">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            {{ usuario?.rol || 'viewer' }}
+          </span>
+        </div>
+        <button type="button" (click)="logout()" class="btn-logout">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+
+    <!-- Role Permission Bar -->
+    <div class="permission-bar">
+      <div class="permission-bar-inner">
+        <span class="permission-indicator">
+          <span class="status-dot" [attr.data-role]="usuario?.rol"></span>
+          Credencial activa: <strong>{{ usuario?.rol === 'admin' ? 'Control Total (Catálogo + Usuarios)' : usuario?.rol === 'editor' ? 'Operador de Catálogo (Lectura + Alta y Edición)' : 'Inspector de Catálogo (Solo Lectura y Exportación)' }}</strong>
+        </span>
+        <span class="manifest-count tabular-nums">Mostrando {{ productosFiltrados.length }} de {{ totalProductos }} ítems</span>
+      </div>
     </div>
   </header>
 
-  <!-- Panel de Administración de Usuarios (solo admin) -->
-  <div class="panel-admin" *ngIf="esAdmin">
-    <h2>👤 Administración de Usuarios</h2>
-    <div class="usuarios-grid">
-      <div *ngFor="let user of usuarios" class="card-usuario">
-        <div *ngIf="editandoUsuarioId !== user._id">
-          <p><strong>Nombre: </strong> {{ user.name }}</p>
-          <p><strong>Email: </strong> {{ user.email }}</p>
-          <p><strong>Rol: </strong> <span class="badge-rol-user">{{ user.rol }}</span></p>
-          <div class="acciones">
-            <button (click)="iniciarEdicionUsuario(user)" class="btn-edit-user" title="Cambiar Rol">✎ Rol</button>
-            <button (click)="eliminarUsuario(user)" class="btn-delete-user" title="Eliminar usuario">Eliminar</button>
-          </div>
+  <main class="dashboard">
+    <!-- Panel de Administración de Usuarios (solo admin) - Ruled Seam Grid (No Nested Cards) -->
+    <section class="panel-admin" *ngIf="esAdmin" aria-labelledby="heading-usuarios">
+      <div class="section-header-bar">
+        <div class="section-title-group">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <h2 id="heading-usuarios">Administración de Usuarios</h2>
         </div>
-        <div *ngIf="editandoUsuarioId === user._id">
-          <p><strong>Nombre:</strong> {{ user.name }}</p>
-          <div class="campo">
-            <label>Rol:</label>
-            <select [(ngModel)]="usuarioEditandoRol.rol">
-              <option value="admin">Admin</option>
-              <option value="editor">Editor</option>
-              <option value="viewer">Viewer</option>
-            </select>
+        <span class="section-count tabular-nums">{{ usuarios.length }} cuentas registradas</span>
+      </div>
+
+      <div class="usuarios-grid">
+        <div *ngFor="let user of usuarios; let idx = index" class="card-usuario">
+          <div *ngIf="editandoUsuarioId !== user._id" class="user-cell-body">
+            <div class="user-cell-top">
+              <span class="catalog-index tabular-nums">{{ formatIndex(idx) }}</span>
+              <span class="badge-rol-user" [attr.data-role]="user.rol">{{ user.rol }}</span>
+            </div>
+            <p class="user-name-line"><strong>{{ user.name }}</strong></p>
+            <p class="user-email-line tabular-nums">{{ user.email }}</p>
+            <div class="acciones acciones-split">
+              <button type="button" (click)="iniciarEdicionUsuario(user)" class="btn-edit-user" title="Cambiar Rol">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Cambiar Rol
+              </button>
+              <button type="button" (click)="eliminarUsuario(user)" class="btn-delete-user" title="Eliminar usuario">
+                Eliminar
+              </button>
+            </div>
           </div>
-          <div class="acciones">
-            <button (click)="guardarRolUsuario()" class="btn-save">Guardar</button>
-            <button (click)="cancelarEdicionUsuario()" class="btn-cancel">Cancelar</button>
+
+          <div *ngIf="editandoUsuarioId === user._id" class="user-cell-body is-editing">
+            <div class="user-cell-top">
+              <span class="catalog-index tabular-nums">{{ formatIndex(idx) }}</span>
+              <span class="editing-tag">Editando permiso</span>
+            </div>
+            <p class="user-name-line"><strong>{{ user.name }}</strong></p>
+            <div class="campo">
+              <label [attr.for]="'role-select-' + user._id">Nivel de acceso</label>
+              <select [id]="'role-select-' + user._id" [(ngModel)]="usuarioEditandoRol.rol">
+                <option value="admin">Admin — Control total</option>
+                <option value="editor">Editor — Gestión de catálogo</option>
+                <option value="viewer">Viewer — Solo lectura</option>
+              </select>
+            </div>
+            <div class="acciones">
+              <button type="button" (click)="guardarRolUsuario()" class="btn-save">Guardar</button>
+              <button type="button" (click)="cancelarEdicionUsuario()" class="btn-cancel">Cancelar</button>
+            </div>
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- Formulario para crear producto (solo admin/editor) -->
+    <section class="card crear" *ngIf="puedeEditar" aria-labelledby="heading-nuevo-producto">
+      <div class="section-header-bar">
+        <div class="section-title-group">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <h2 id="heading-nuevo-producto">Registrar Nuevo Producto</h2>
+        </div>
+        <span class="section-meta">Alta directa en manifiesto</span>
+      </div>
+
+      <div class="form-row">
+        <div class="campo campo-nombre">
+          <label for="new-nombre">Nombre del producto *</label>
+          <input id="new-nombre" type="text" [(ngModel)]="nuevoProducto.nombre" placeholder="Ej. Monitor Industrial 27&quot;" required>
+        </div>
+        <div class="campo campo-precio">
+          <label for="new-precio">Precio unitario (USD) *</label>
+          <input id="new-precio" type="number" [(ngModel)]="nuevoProducto.precio" min="0" step="0.01" class="tabular-nums" required>
+        </div>
+        <div class="campo campo-categoria">
+          <label for="new-categoria">Categoría</label>
+          <input id="new-categoria" type="text" [(ngModel)]="nuevoProducto.categoria" placeholder="Ej. Hardware, Insumos...">
+        </div>
+        <div class="campo campo-stock">
+          <label for="new-stock">Stock inicial</label>
+          <input id="new-stock" type="number" [(ngModel)]="nuevoProducto.stock" min="0" class="tabular-nums">
+        </div>
+        <div class="campo descripcion-campo">
+          <label for="new-descripcion">Especificación / Descripción</label>
+          <textarea id="new-descripcion" [(ngModel)]="nuevoProducto.descripcion" rows="2" placeholder="Detalles técnicos, presentación o notas de inventario..."></textarea>
+        </div>
+
+        <div class="form-footer-bar">
+          <div class="checkbox-wrapper" (click)="toggleCheckbox('nuevo')" role="switch" [attr.aria-checked]="nuevoProducto.disponible" tabindex="0" (keydown.space)="toggleCheckbox('nuevo'); $event.preventDefault()">
+            <input type="checkbox" [(ngModel)]="nuevoProducto.disponible" id="disp" tabindex="-1">
+            <div class="toggle"></div>
+            <span class="checkbox-label">{{ nuevoProducto.disponible ? 'Habilitado para despacho (Disponible)' : 'Retenido / No disponible' }}</span>
+          </div>
+
+          <button type="button" class="btn-primary-dispatch" (click)="crearProducto()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Agregar al Manifiesto
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Barra de Comando: Filtros, Búsqueda y Exportación -->
+    <section class="manifest-controls" aria-labelledby="heading-listado">
+      <div class="titulo-filtro">
+        <div class="catalog-heading-cluster">
+          <h2 id="heading-listado">Listado de Productos</h2>
+        </div>
+
+        <div class="controls-cluster">
+          <div class="filtro-wrapper">
+            <label for="select-orden" class="sr-only">Ordenar por</label>
+            <select id="select-orden" [(ngModel)]="filtroOrden" (change)="filtrarProductos()">
+              <option value="">Orden original</option>
+              <option value="mayor">Mayor Precio</option>
+              <option value="menor">Menor Precio</option>
+              <option value="az">Nombre (A - Z)</option>
+              <option value="za">Nombre (Z - A)</option>
+            </select>
+          </div>
+
+          <div class="filtro-wrapper">
+            <label for="select-categoria" class="sr-only">Filtrar por categoría</label>
+            <select id="select-categoria" [(ngModel)]="categoriaSeleccionada" (change)="filtrarProductos()">
+              <option value="">Todas las categorías</option>
+              <option *ngFor="let cat of categoriasDisponibles" [value]="cat">{{ cat }}</option>
+            </select>
+          </div>
+
+          <!-- Raise 4: High-contrast segmented capsule filter -->
+          <div class="filtro-wrapper tri-state-container">
+            <div role="group" aria-label="Estado de disponibilidad" class="tri-state-filter">
+              <button type="button" (click)="setStatusFiltro('todos')" [class.active]="statusFiltro==='todos'">
+                Todos <span class="pill-count tabular-nums">{{ totalProductos }}</span>
+              </button>
+              <button type="button" (click)="setStatusFiltro('disponible')" [class.active]="statusFiltro==='disponible'">
+                Disponibles <span class="pill-count tabular-nums">{{ totalDisponibles }}</span>
+              </button>
+              <button type="button" (click)="setStatusFiltro('no-disponible')" [class.active]="statusFiltro==='no-disponible'">
+                No disponibles <span class="pill-count tabular-nums">{{ totalNoDisponibles }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="filtro-wrapper">
+            <button type="button" (click)="exportarCSV()" class="btn-export">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Exportar CSV
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="busqueda">
+        <div class="search-input-shell">
+          <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" [(ngModel)]="terminoBusqueda" (input)="filtrarProductos()" placeholder="Buscar producto por nombre..." aria-label="Buscar producto por nombre">
+          <button *ngIf="terminoBusqueda" type="button" class="btn-clear-search" (click)="terminoBusqueda = ''; filtrarProductos()" aria-label="Limpiar búsqueda">
+            ✕
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grilla Estructural de Productos (1px Ruled Manifest Grid) -->
+    <div class="productos-grid" *ngIf="productosFiltrados.length > 0">
+      <article *ngFor="let producto of productosFiltrados; let i = index"
+               class="card producto"
+               [class.is-unavailable]="!producto.disponible"
+               [class.is-editing-card]="editandoId === producto._id">
+
+        <!-- Modo visualización -->
+        <div *ngIf="editandoId !== producto._id" class="producto-view-layout">
+          <div class="item-main-head">
+            <h3>{{ producto.nombre }}</h3>
+            <p class="precio tabular-nums">${{ producto.precio | number:'1.0-2' }}</p>
+          </div>
+
+          <!-- Signature Move: Per-item Clearance Strip -->
+          <div class="item-clearance-strip">
+            <div class="item-id-cluster">
+              <span class="catalog-index tabular-nums">{{ formatIndex(i) }}</span>
+              <span class="category-chip">{{ producto.categoria || 'Sin categoría' }}</span>
+            </div>
+            <span class="status-stamp" [class.disponible]="producto.disponible" [class.no-disponible]="!producto.disponible">
+              <span class="stamp-dot"></span>
+              {{ producto.disponible ? 'Disponible' : 'No disponible' }}
+            </span>
+          </div>
+
+          <div class="descripcion-wrapper">
+            <p class="descripcion" *ngIf="producto.descripcion">
+              {{ descripcionExpandida === producto._id ? producto.descripcion : (producto.descripcion | slice:0:95) }}
+              <span *ngIf="producto.descripcion && producto.descripcion.length > 95">
+                <a (click)="toggleDescripcion(producto._id)" class="leer-mas">
+                  {{ descripcionExpandida === producto._id ? ' Mostrar menos' : '... Leer más' }}
+                </a>
+              </span>
+            </p>
+            <p class="descripcion descripcion-empty" *ngIf="!producto.descripcion">
+              Sin notas técnicas registradas.
+            </p>
+          </div>
+
+          <!-- Raise 2: Proportional Stock Level Bar + Tabular Spec Row -->
+          <div class="stock-ledger-block">
+            <div class="stock-ledger-labels">
+              <span class="desc">Existencias en depósito</span>
+              <span class="stock-count tabular-nums" [class.stock-zero]="producto.stock <= 0">{{ producto.stock }} u.</span>
+            </div>
+            <div class="stock-meter" aria-hidden="true">
+              <div class="stock-meter-fill"
+                   [class.fill-active]="producto.disponible && producto.stock > 0"
+                   [class.fill-muted]="!producto.disponible || producto.stock <= 0"
+                   [style.width.%]="getStockPercent(producto.stock)"></div>
+            </div>
+          </div>
+
+          <div class="acciones acciones-split" *ngIf="puedeEditar">
+            <button type="button" (click)="iniciarEdicion(producto)" class="btn-edit">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              Editar
+            </button>
+            <button type="button" (click)="eliminarProducto(producto._id)" class="btn-delete" *ngIf="puedeEliminar">
+              Eliminar
+            </button>
+          </div>
+        </div>
+
+        <!-- Modo edición inline -->
+        <div *ngIf="editandoId === producto._id" class="producto-edit-layout">
+          <div class="item-main-head">
+            <h3>Editando registro</h3>
+            <span class="catalog-index tabular-nums">{{ formatIndex(i) }}</span>
+          </div>
+
+          <div class="edit-row">
+            <div class="campo">
+              <label>Nombre</label>
+              <input type="text" [(ngModel)]="editandoProducto.nombre" placeholder="Nombre">
+            </div>
+            <div class="campo">
+              <label>Precio (USD)</label>
+              <input type="number" [(ngModel)]="editandoProducto.precio" class="tabular-nums" placeholder="Precio">
+            </div>
+            <div class="campo">
+              <label>Categoría</label>
+              <input type="text" [(ngModel)]="editandoProducto.categoria" placeholder="Categoría">
+            </div>
+            <div class="campo">
+              <label>Stock (Unidades)</label>
+              <input type="number" [(ngModel)]="editandoProducto.stock" class="tabular-nums" placeholder="Stock">
+            </div>
+            <div class="campo textarea-campo">
+              <label>Descripción</label>
+              <textarea [(ngModel)]="editandoProducto.descripcion" rows="3"></textarea>
+            </div>
+            <div class="checkbox-wrapper edit-switch" (click)="toggleCheckbox('edit')" role="switch" [attr.aria-checked]="editandoProducto.disponible">
+              <input type="checkbox" [(ngModel)]="editandoProducto.disponible" id="disp-edit">
+              <div class="toggle"></div>
+              <span class="checkbox-label">{{ editandoProducto.disponible ? 'Disponible' : 'No disponible' }}</span>
+            </div>
+          </div>
+
+          <div class="acciones">
+            <button type="button" (click)="guardarEdicion()" class="btn-save">Guardar cambios</button>
+            <button type="button" (click)="cancelarEdicion()" class="btn-cancel">Cancelar</button>
+          </div>
+        </div>
+
+      </article>
     </div>
-  </div>
+
+    <!-- Estado vacío -->
+    <div *ngIf="productosFiltrados.length === 0" class="vacio-panel">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+        <line x1="12" y1="22.08" x2="12" y2="12"/>
+      </svg>
+      <p class="vacio">
+        <ng-container *ngIf="terminoBusqueda || categoriaSeleccionada || statusFiltro !== 'todos'">
+          No se encontraron registros que coincidan con los filtros activos{{ terminoBusqueda ? ' para "' + terminoBusqueda + '"' : '' }}.
+        </ng-container>
+        <ng-container *ngIf="!terminoBusqueda && !categoriaSeleccionada && statusFiltro === 'todos'">
+          El manifiesto no registra productos todavía. Utilizá el formulario superior para dar de alta el primer ítem.
+        </ng-container>
+      </p>
+    </div>
+  </main>
 
   <!-- Modal de confirmar eliminar usuario -->
-  <div class="modal" *ngIf="mostrarModalEliminarUsuario">
+  <div class="modal" *ngIf="mostrarModalEliminarUsuario" role="dialog" aria-modal="true" aria-labelledby="modal-del-user-title">
     <div class="modal-content">
-      <h3>¿Seguro que querés eliminar este usuario?</h3>
-      <p>Esta acción no se puede deshacer.</p>
+      <h3 id="modal-del-user-title">¿Seguro que querés eliminar este usuario?</h3>
+      <p>Se revocará el acceso de <strong>{{ usuarioAEliminar?.name }}</strong> de forma permanente. Esta acción no se puede deshacer.</p>
       <div class="modal-acciones">
-        <button (click)="confirmarEliminarUsuario()" class="btn-confirmar">Eliminar</button>
-        <button (click)="cerrarModalEliminarUsuario()" class="btn-cancelar-modal">Cancelar</button>
+        <button type="button" (click)="cerrarModalEliminarUsuario()" class="btn-cancelar-modal">Cancelar</button>
+        <button type="button" (click)="confirmarEliminarUsuario()" class="btn-confirmar">Eliminar cuenta</button>
       </div>
     </div>
   </div>
 
   <!-- Modal de confirmar logout -->
-  <div class="modal" *ngIf="mostrarModalLogout">
+  <div class="modal" *ngIf="mostrarModalLogout" role="dialog" aria-modal="true" aria-labelledby="modal-logout-title">
     <div class="modal-content">
-      <h3>¿Seguro que querés cerrar sesión?</h3>
+      <h3 id="modal-logout-title">¿Seguro que querés cerrar sesión?</h3>
+      <p>Finalizarás tu sesión operativa actual como <strong>{{ usuario?.rol }}</strong>.</p>
       <div class="modal-acciones">
-        <button (click)="confirmarLogout()" class="btn-confirmar">Aceptar</button>
-        <button (click)="cerrarModalLogout()" class="btn-cancelar-modal">Cancelar</button>
+        <button type="button" (click)="cerrarModalLogout()" class="btn-cancelar-modal">Cancelar</button>
+        <button type="button" (click)="confirmarLogout()" class="btn-confirmar">Cerrar sesión</button>
       </div>
     </div>
   </div>
 
   <!-- Modal de confirmar eliminar producto -->
-  <div class="modal" *ngIf="mostrarModalEliminar">
+  <div class="modal" *ngIf="mostrarModalEliminar" role="dialog" aria-modal="true" aria-labelledby="modal-del-prod-title">
     <div class="modal-content">
-      <h3>¿Seguro que querés eliminar este producto?</h3>
-      <p>Esta acción no se puede deshacer.</p>
+      <h3 id="modal-del-prod-title">¿Seguro que querés eliminar este producto?</h3>
+      <p>El registro será retirado definitivamente del manifiesto de inventario. Esta acción no se puede deshacer.</p>
       <div class="modal-acciones">
-        <button (click)="confirmarEliminar()" class="btn-confirmar">Eliminar</button>
-        <button (click)="cerrarModalEliminar()" class="btn-cancelar-modal">Cancelar</button>
+        <button type="button" (click)="cerrarModalEliminar()" class="btn-cancelar-modal">Cancelar</button>
+        <button type="button" (click)="confirmarEliminar()" class="btn-confirmar">Eliminar registro</button>
       </div>
     </div>
   </div>
-
-  <!-- Formulario para crear (solo admin/editor) -->
-  <div class="card crear" *ngIf="puedeEditar">
-    <h2>📦 Nuevo Producto</h2>
-    <div class="form-row">
-      <div class="campo">
-        <label>Nombre</label>
-        <input type="text" [(ngModel)]="nuevoProducto.nombre" required>
-      </div>
-      <div class="campo">
-        <label>Precio</label>
-        <input type="number" [(ngModel)]="nuevoProducto.precio" required>
-      </div>
-      <div class="campo">
-        <label>Categoría</label>
-        <input type="text" [(ngModel)]="nuevoProducto.categoria">
-      </div>
-      <div class="campo">
-        <label>Stock</label>
-        <input type="number" [(ngModel)]="nuevoProducto.stock">
-      </div>
-      <div class="campo descripcion-campo">
-        <label>Descripción</label>
-        <textarea [(ngModel)]="nuevoProducto.descripcion" rows="3"></textarea>
-      </div>
-
-      <div class="checkbox-wrapper" (click)="toggleCheckbox('nuevo')">
-        <input type="checkbox" [(ngModel)]="nuevoProducto.disponible" id="disp">
-        <div class="toggle"></div>
-        <span class="checkbox-label">Disponible</span>
-      </div>
-
-      <button (click)="crearProducto()">Agregar</button>
-    </div>
-
-  </div>
-
-  <!-- Listado de productos -->
-  <div class="titulo-filtro">
-    <h2>Listado de Productos</h2>
-    <div class="filtro-wrapper">
-      <select [(ngModel)]="filtroOrden" (change)="filtrarProductos()">
-        <option value="">Filtrar</option>
-        <option value="mayor">Mayor Precio</option>
-        <option value="menor">Menor Precio</option>
-        <option value="az">A - Z</option>
-        <option value="za">Z - A</option>
-      </select>
-    </div>
-    <div class="filtro-wrapper">
-      <select [(ngModel)]="categoriaSeleccionada" (change)="filtrarProductos()">
-        <option value="">Categoría</option>
-        <option *ngFor="let cat of categoriasDisponibles" [value]="cat">{{ cat }}</option>
-      </select>
-    </div>
-    <div class="filtro-wrapper tri-state-container">
-      <div role="group" aria-label="Estado de disponibilidad" class="tri-state-filter">
-        <button type="button" (click)="setStatusFiltro('todos')" [class.active]="statusFiltro==='todos'">Todos</button>
-        <button type="button" (click)="setStatusFiltro('disponible')" [class.active]="statusFiltro==='disponible'">Disponibles</button>
-        <button type="button" (click)="setStatusFiltro('no-disponible')" [class.active]="statusFiltro==='no-disponible'">No disponibles</button>
-      </div>
-    </div>
-    <div class="filtro-wrapper">
-      <button (click)="exportarCSV()" class="btn-export">Exportar CSV</button>
-    </div>
-  </div>
-
-  <div class="busqueda">
-    <input type="text" [(ngModel)]="terminoBusqueda" (input)="filtrarProductos()" placeholder="Buscar producto por nombre...">
-  </div>
-
-  <div class="productos-grid">
-    <div *ngFor="let producto of productosFiltrados" class="card producto">
-
-      <!-- Modo visualización -->
-      <div *ngIf="editandoId !== producto._id">
-        <h3>{{ producto.nombre }}</h3>
-        <p class="precio">${{ producto.precio }}</p>
-        <div class="descripcion-wrapper">
-          <p class="descripcion">
-            {{ descripcionExpandida === producto._id ? producto.descripcion : (producto.descripcion | slice:0:80) }}
-            <span *ngIf="producto.descripcion && producto.descripcion.length > 80">
-              <a (click)="toggleDescripcion(producto._id)" class="leer-mas">
-                {{ descripcionExpandida === producto._id ? ' Ver menos' : '...Leer más' }}
-              </a>
-            </span>
-          </p>
-        </div>
-        <p class="desc">Categoría: {{ producto.categoria }}</p>
-        <p class="desc">Stock: {{ producto.stock }}</p>
-        <p class="desc" [class.disponible]="producto.disponible" [class.no-disponible]="!producto.disponible">
-          {{ producto.disponible ? 'Disponible' : 'No disponible' }}
-        </p>
-        <div class="acciones" *ngIf="puedeEditar">
-          <button (click)="iniciarEdicion(producto)" class="btn-edit">✎ Editar</button>
-          <button (click)="eliminarProducto(producto._id)" class="btn-delete" *ngIf="puedeEliminar">Eliminar</button>
-        </div>
-      </div>
-
-      <!-- Modo edición -->
-      <div *ngIf="editandoId === producto._id">
-        <h3>Editando</h3>
-        <div class="edit-row">
-          <div class="campo">
-            <label>Nombre</label>
-            <input type="text" [(ngModel)]="editandoProducto.nombre" placeholder="Nombre">
-          </div>
-          <div class="campo">
-            <label>Precio</label>
-            <input type="number" [(ngModel)]="editandoProducto.precio" placeholder="Precio">
-          </div>
-          <div class="campo textarea-campo">
-            <label>Descripción</label>
-            <textarea [(ngModel)]="editandoProducto.descripcion" rows="3"></textarea>
-          </div>
-          <div class="campo">
-            <label>Categoría</label>
-            <input type="text" [(ngModel)]="editandoProducto.categoria" placeholder="Categoría">
-          </div>
-          <div class="campo">
-            <label>Stock</label>
-            <input type="number" [(ngModel)]="editandoProducto.stock" placeholder="Stock">
-          </div>
-          <div class="checkbox-wrapper" (click)="toggleCheckbox('edit')">
-            <input type="checkbox" [(ngModel)]="editandoProducto.disponible" id="disp-edit">
-            <div class="toggle"></div>
-            <span class="checkbox-label">Disponible</span>
-          </div>
-        </div>
-
-        <div class="acciones">
-          <button (click)="guardarEdicion()" class="btn-save">Guardar</button>
-          <button (click)="cancelarEdicion()" class="btn-cancel">Cancelar</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <p *ngIf="productosFiltrados.length === 0" class="vacio">
-    <ng-container *ngIf="terminoBusqueda">
-      No se encontraron productos para "{{ terminoBusqueda }}"
-    </ng-container>
-    <ng-container *ngIf="!terminoBusqueda">
-      No hay productos todavía
-    </ng-container>
-  </p>
 </div>

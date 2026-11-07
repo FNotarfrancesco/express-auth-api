@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-07T18:15:00.000Z",
+  "title": "Design System: Mis Productos (Harbor Clearance & Manifest Ledger)",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Deep Harbor Navy",
+        "canonical": "#0D1B2A",
+        "tonalRamp": ["#081019", "#0D1B2A", "#15263B", "#253A54", "#3D5676"]
+      },
+      "neutral-ground": {
+        "role": "neutral",
+        "displayName": "Warm Manifest Stone",
+        "canonical": "#F4F1EA",
+        "tonalRamp": ["#FFFFFF", "#FCFBF8", "#F4F1EA", "#ECE7DC", "#E5DFD2", "#D5CFC2"]
+      },
+      "brass-accent": {
+        "role": "accent",
+        "displayName": "Signal Brass / Amber",
+        "canonical": "#D97706",
+        "tonalRamp": ["#FFFBEB", "#FEF3C7", "#F59E0B", "#D97706", "#B45309", "#78350F"]
+      },
+      "emerald-cleared": {
+        "role": "accent",
+        "displayName": "Maritime Emerald",
+        "canonical": "#0F766E",
+        "tonalRamp": ["#F0FDFA", "#CCFBF1", "#14B8A6", "#0F766E", "#115E59", "#134E4A"]
+      },
+      "coral-alert": {
+        "role": "accent",
+        "displayName": "Signal Coral",
+        "canonical": "#B91C1C",
+        "tonalRamp": ["#FEF2F2", "#FEE2E2", "#EF4444", "#DC2626", "#B91C1C", "#991B1B"]
+      }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Headline", "purpose": "Primary view headings and modal titles." },
+      "title": { "displayName": "Title", "purpose": "Product card names and section headers." },
+      "body": { "displayName": "Body", "purpose": "Product descriptions and form labels." },
+      "label": { "displayName": "Label / Data Mono", "purpose": "Sequential item IDs, prices, stock counts, and timestamps." }
+    },
+    "elevation": {
+      "flat": "none",
+      "modal": "0 16px 36px rgba(13, 27, 42, 0.28)"
+    },
+    "motion": {
+      "transitionFast": "160ms cubic-bezier(0.16, 1, 0.3, 1)",
+      "easeOutExpo": "cubic-bezier(0.16, 1, 0.3, 1)"
+    },
+    "breakpoints": {
+      "mobile": "600px",
+      "tablet": "960px",
+      "desktop": "1320px"
+    }
+  }
+}
